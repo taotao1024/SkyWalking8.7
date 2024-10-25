@@ -95,7 +95,7 @@ public class SkyWalkingAgent {
         }
         // 3、使用 byteBuddy 实现 字节码增强
         final ByteBuddy byteBuddy = new ByteBuddy().with(TypeValidation.of(Config.Agent.IS_OPEN_DEBUGGING_CLASS));
-        // 指定ByteBuddy要忽略的类
+        // 指定ByteBuddy要忽略的类 定制化Agent行为
         AgentBuilder agentBuilder = new AgentBuilder.Default(byteBuddy).ignore(
                 nameStartsWith("net.bytebuddy.")
                         .or(nameStartsWith("org.slf4j."))
@@ -120,6 +120,7 @@ public class SkyWalkingAgent {
         }
 
         // JDK9 新增的模块系统 module-info.java
+        //  解决JDK模块系统的跨模块类访问
         try {
             agentBuilder = JDK9ModuleExporter.openReadEdge(instrumentation, agentBuilder, edgeClasses);
         } catch (Exception e) {
@@ -138,7 +139,7 @@ public class SkyWalkingAgent {
         }
 
         agentBuilder.type(pluginFinder.buildMatch()) // 指定要拦截的类
-                    .transform(new Transformer(pluginFinder))// 插桩、字节码增强、修改字节码
+                    .transform(new Transformer(pluginFinder))// 插桩、字节码增强、修改字节码 pluginFinder.find(TypeDescription)
                     .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION) // RETRANSFORMATION 和 REDEFINE 的区别在于是否保留 修改前的方法
                     .with(new RedefinitionListener()) // 注册监听器
                     .with(new Listener()) // 注册Transformer的监听器
@@ -165,6 +166,17 @@ public class SkyWalkingAgent {
             this.pluginFinder = pluginFinder;
         }
 
+        /**
+         * 查找所有能够对当前被拦截到的类生效的插件
+         * 如果有生效的插件，调用每个插件的define()方法去做字节码增强，返回被所有可用插件修改完之后的最
+         * 终字节码如果没有生效的插件，返回被拦截到的类的原生字节码
+         *
+         * @param builder         当前拦截到的类的字节码
+         * @param typeDescription 简单当成class 包含类的描述信息
+         * @param classLoader     加载[当前拦截到的类]的类加载器
+         * @param module          无用参数
+         * @return
+         */
         @Override
         public DynamicType.Builder<?> transform(final DynamicType.Builder<?> builder,// 当前拦截到的类的字节码
                                                 final TypeDescription typeDescription,// 简单当成class 包含类的描述信息
@@ -177,6 +189,7 @@ public class SkyWalkingAgent {
             if (pluginDefines.size() > 0) {
                 DynamicType.Builder<?> newBuilder = builder;
                 // 标记类
+                // 增强上下文
                 EnhanceContext context = new EnhanceContext();
                 for (AbstractClassEnhancePluginDefine define : pluginDefines) {
                     // 构建新的字节码 核心内容

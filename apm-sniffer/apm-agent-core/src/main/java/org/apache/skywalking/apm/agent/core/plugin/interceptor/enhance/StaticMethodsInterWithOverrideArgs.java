@@ -30,6 +30,8 @@ import org.apache.skywalking.apm.agent.core.logging.api.LogManager;
 /**
  * The actual byte-buddy's interceptor to intercept class instance methods. In this class, it provide a bridge between
  * byte-buddy and sky-walking plugin.
+ * <p>
+ * 入参增强
  */
 public class StaticMethodsInterWithOverrideArgs {
     private static final ILog LOGGER = LogManager.getLogger(StaticMethodsInterWithOverrideArgs.class);
@@ -69,6 +71,7 @@ public class StaticMethodsInterWithOverrideArgs {
 
         MethodInterceptResult result = new MethodInterceptResult();
         try {
+            // 入参增强
             interceptor.beforeMethod(clazz, method, allArguments, method.getParameterTypes(), result);
         } catch (Throwable t) {
             LOGGER.error(t, "class[{}] before static method[{}] intercept failure", clazz, method.getName());
@@ -79,6 +82,7 @@ public class StaticMethodsInterWithOverrideArgs {
             if (!result.isContinue()) {
                 ret = result._ret();
             } else {
+                // 原方法的调用时传入修改后的原方法入参
                 ret = zuper.call(allArguments);
             }
         } catch (Throwable t) {

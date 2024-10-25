@@ -45,6 +45,14 @@ import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.MethodInt
  * 这个类不会在真实环境中加载。这是用于动态类生成的类模板。
  * <p>
  * InstanceMethodInterTemplate.java  可以当多 InstanceMethodInterTemplate.txt 来看
+ *
+ * JVM-Agent字节码增强的本质是字节码的需修改 修改原方法名 使用 新方法进行替换
+ *
+ * JDK类库中的类的实例方法插桩且不修改原方法入参会交给通过InstanceMethodInterTemplate生成的
+ * 类去处理，实际也就是模板类InstanceMethodInterTemplate的TARGET_INTERCEPTOR赋值为插件拦
+ * 截器全类名，和实例方法插桩的InstMethodsInter的intercept()方法相比这里多调用了一个prepare()方
+ * 法
+ *
  */
 public class InstanceMethodInterTemplate {
     /**
@@ -70,7 +78,7 @@ public class InstanceMethodInterTemplate {
     public static Object intercept(@This Object obj, @AllArguments Object[] allArguments, @SuperCall Callable<?> zuper,
                                    @Origin Method method) throws Throwable {
         EnhancedInstance targetObject = (EnhancedInstance) obj;
-        // 准备上下文。链接到 AppClassLoader 中的代理核心。
+        // 准备上下文 链接到 AppClassLoader 中的代理核心。
         prepare();
 
         MethodInterceptResult result = new MethodInterceptResult();
@@ -122,10 +130,14 @@ public class InstanceMethodInterTemplate {
      * 准备上下文。链接到 AppClassLoader 中的代理核心。
      * <p>
      * 1、打通 BootstrapClassLoader 和 AgentClassLoader
-     * - 拿到ILog 生成日志
-     * - 拿到插件自定义的拦截器实例
+     * - 通过AgentClassLoader加载，拿到ILog生成日志对象 生成日志
+     * - 通过AgentClassLoader加载，拿到插件自定义的拦截器实例
      * 2、代替 非JDK 核心类库插件运行逻辑中的
      * interceptor = InterceptorInstanceLoader.load(instanceMethodsAroundInterceptorClassName, classLoader); 功能
+     * <p>
+     * InstanceMethodInterTemplate生成的类是由BootstrapClassLoader去加载的，而日志对象和插件自定
+     * 义的拦截器都是通过AgentClassLoader去加载的，prepare()方法本质就是为了打通BootstrapClassLoader和AgentClassLoader.
+     *
      */
     private static void prepare() {
         if (INTERCEPTOR == null) {

@@ -18,6 +18,9 @@
 
 package org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance;
 
+/**
+ * 该方法用于 方法入参增强
+ */
 public interface OverrideCallable {
     Object call(Object[] args);
 }

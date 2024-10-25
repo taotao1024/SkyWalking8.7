@@ -98,7 +98,7 @@ public enum ServiceManager {
                     // 没有 @DefaultImplementor 有 @OverrideImplementor 注解
                     Class<? extends BootService> targetService = overrideImplementor.value();
                     if (bootedServices.containsKey(targetService)) {
-                        // 当前 覆盖实现 要覆盖 默认实现 已经被加载进来
+                        // 当前 覆盖实现 要覆盖 默认实现(已经被加载进来)
                         boolean presentDefault = bootedServices.get(targetService)
                                 .getClass()
                                 .isAnnotationPresent(DefaultImplementor.class);
@@ -110,7 +110,7 @@ public enum ServiceManager {
                                     "Service " + bootServiceClass + " overrides conflict, " + "exist more than one service want to override :" + targetService);
                         }
                     } else {
-                        // 当前 覆盖实现 要覆盖的 默认实现 还没有被加载进来。
+                        // 当前 覆盖实现 要覆盖的 默认实现(还没有被加载进来)
                         // 将 当前的覆盖实现 当做 默认实现
                         bootedServices.put(targetService, bootService);
                     }

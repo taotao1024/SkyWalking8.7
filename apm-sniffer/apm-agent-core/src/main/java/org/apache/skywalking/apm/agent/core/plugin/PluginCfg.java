@@ -37,6 +37,12 @@ public enum PluginCfg {
     private List<PluginDefine> pluginClassList = new ArrayList<PluginDefine>();
     private PluginSelector pluginSelector = new PluginSelector();
 
+    /**
+     * PluginCfg的方法会把skywalking-plugin.def转换为PluginDefine对象
+     * 属性：插件名和插件定义的类名 最后剔除配置文件中指定的不需要启用的插
+     * @param input
+     * @throws IOException
+     */
     void load(InputStream input) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -46,6 +52,7 @@ public enum PluginCfg {
                     if (pluginDefine.trim().length() == 0 || pluginDefine.startsWith("#")) {
                         continue;
                     }
+                    // skywalking-plugin.def转换为PluginDefine对象
                     PluginDefine plugin = PluginDefine.build(pluginDefine);
                     pluginClassList.add(plugin);
                 } catch (IllegalPluginDefineException e) {
@@ -53,6 +60,7 @@ public enum PluginCfg {
                 }
             }
             // 排除不起用的插件
+            // 剔除配置文件中指定的不需要启用的插件
             pluginClassList = pluginSelector.select(pluginClassList);
         } finally {
             input.close();

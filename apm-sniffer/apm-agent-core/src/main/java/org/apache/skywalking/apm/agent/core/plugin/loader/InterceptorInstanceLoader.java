@@ -84,6 +84,7 @@ public class InterceptorInstanceLoader {
             } finally {
                 INSTANCE_LOAD_LOCK.unlock();
             }
+            // 通过pluginLoader来实例化拦截器对象
             inst = Class.forName(className, true, pluginLoader).newInstance();
             if (inst != null) {
                 INSTANCE_CACHE.put(instanceKey, inst);

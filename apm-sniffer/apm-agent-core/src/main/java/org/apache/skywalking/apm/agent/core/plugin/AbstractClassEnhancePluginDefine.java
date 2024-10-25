@@ -53,6 +53,7 @@ public abstract class AbstractClassEnhancePluginDefine {
     /**
      * Main entrance of enhancing the class.
      * 字节码增强入口
+     * 版本确认
      *
      * @param typeDescription target class description.
      * @param builder         byte-buddy's builder to manipulate target class's bytecode.
@@ -62,7 +63,9 @@ public abstract class AbstractClassEnhancePluginDefine {
      */
     public DynamicType.Builder<?> define(TypeDescription typeDescription, DynamicType.Builder<?> builder,
         ClassLoader classLoader, EnhanceContext context) throws PluginException {
+        // 当前插件的全类名
         String interceptorDefineClassName = this.getClass().getName();
+        // 当前被拦截到的类的全类名
         String transformClassName = typeDescription.getTypeName();
         if (StringUtil.isEmpty(transformClassName)) {
             LOGGER.warn("classname of being intercepted is not defined by {}.", interceptorDefineClassName);
@@ -70,6 +73,7 @@ public abstract class AbstractClassEnhancePluginDefine {
         }
 
         LOGGER.debug("prepare to enhance class {} by {}.", transformClassName, interceptorDefineClassName);
+        // witness机制校验当前插件是否可用
         WitnessFinder finder = WitnessFinder.INSTANCE;
         /*
          * find witness classes for enhance class
@@ -101,6 +105,7 @@ public abstract class AbstractClassEnhancePluginDefine {
          */
         DynamicType.Builder<?> newClassBuilder = this.enhance(typeDescription, builder, classLoader, context);
         // 相应状态
+        // 将记录状态的上下文EnhanceContext设置为已增强
         context.initializationStageCompleted();
         LOGGER.debug("enhance class {} by {} completely.", transformClassName, interceptorDefineClassName);
         // 相应修改后的新字节码

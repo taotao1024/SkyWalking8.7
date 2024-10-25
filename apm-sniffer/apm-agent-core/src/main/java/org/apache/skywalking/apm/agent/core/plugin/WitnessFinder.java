@@ -31,10 +31,17 @@ public enum WitnessFinder {
     INSTANCE;
     /**
      * TypePool 类型池
+     * key:ClassLoader value:这个ClassLoader的类型池,也就是这个ClassLoader所有能加载的类
      */
     private final Map<ClassLoader, TypePool> poolMap = new HashMap<ClassLoader, TypePool>();
 
     /**
+     * witnessClass校验时，会基于传入的classLoader构造TypePool来判断witnessClass是否存在，
+     * TypePool最终会存储到Map中
+     * <p>
+     * witnessMethod校验时，先判断该方法所在的类是否在这个ClassLoader中（走witnessClass校验
+     * 的流程），再判断该方法是否存在
+     *
      * @param classLoader for finding the witnessClass
      * @return true, if the given witnessClass exists, through the given classLoader.
      */
@@ -55,6 +62,8 @@ public enum WitnessFinder {
             synchronized (poolMap) {
                 if (!poolMap.containsKey(mappingKey)) {
                     // 把所有的类加载进来
+                    // classLoader == null,基于BootStrapClassLoader构造TypePool
+                    // 否则基于自身的classLoader构造TypePool
                     TypePool classTypePool = classLoader == null ? TypePool.Default.ofBootLoader() : TypePool.Default.of(classLoader);
                     poolMap.put(mappingKey, classTypePool);
                 }
@@ -70,10 +79,12 @@ public enum WitnessFinder {
      * @return true, if the given witness method exists, through the given classLoader.
      */
     public boolean exist(WitnessMethod witnessMethod, ClassLoader classLoader) {
+        // 方法所在的类是否在这个ClassLoader中
         TypePool.Resolution resolution = getResolution(witnessMethod.getDeclaringClassName(), classLoader);
         if (!resolution.isResolved()) {
             return false;
         }
+        // 判断该方法是否存在
         return !resolution.resolve()
                 .getDeclaredMethods()
                 .filter(witnessMethod.getElementMatcher())

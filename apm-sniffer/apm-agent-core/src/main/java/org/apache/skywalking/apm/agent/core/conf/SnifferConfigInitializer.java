@@ -59,6 +59,8 @@ public class SnifferConfigInitializer {
      * config file.
      * <p>
      * At the end, `agent.service_name` and `collector.servers` must not be blank.
+     *
+     * 逐级覆盖 agent参数 > 系统环境变量 > /config/agent.config
      */
     public static void initializeCoreConfig(String agentOptions) {
         AGENT_SETTINGS = new Properties();
@@ -66,7 +68,7 @@ public class SnifferConfigInitializer {
             AGENT_SETTINGS.load(configFileStream);
             for (String key : AGENT_SETTINGS.stringPropertyNames()) {
                 String value = (String) AGENT_SETTINGS.get(key);
-                // 配置文件解析
+                // 配置文件解析 配置值里的占位符替换
                 AGENT_SETTINGS.put(key, PropertyPlaceholderHelper.INSTANCE.replacePlaceholders(value, AGENT_SETTINGS));
             }
 
