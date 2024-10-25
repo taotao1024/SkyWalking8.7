@@ -23,7 +23,8 @@
 hs_err_pid*
 replay_pid*
 
-# IDEA
-/.idea/
-/.muse/
-/.mvn/
+## for IDEA
+.muse
+.mvn
+.idea
+*.iml
