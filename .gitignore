@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
@@ -28,3 +29,10 @@ replay_pid*
 .mvn
 .idea
 *.iml
+.gitignore
+
+# SkyWalking
+skywalking-agent/
+*\*.proto
+*\dependency-reduced-pom.xml
+*\target\
