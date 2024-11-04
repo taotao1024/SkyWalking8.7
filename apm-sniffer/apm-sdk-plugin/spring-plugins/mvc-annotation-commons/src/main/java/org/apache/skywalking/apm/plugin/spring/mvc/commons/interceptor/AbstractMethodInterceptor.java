@@ -101,7 +101,7 @@ public abstract class AbstractMethodInterceptor implements InstanceMethodsAround
             }
             operationName = getAcceptedMethodTypes(method) + requestURL;
         }
-
+        // 获取到请求对象 request
         Object request = ContextManager.getRuntimeContext().get(REQUEST_KEY_IN_RUNTIME_CONTEXT);
 
         if (request != null) {
@@ -123,11 +123,11 @@ public abstract class AbstractMethodInterceptor implements InstanceMethodsAround
                     Tags.HTTP.METHOD.set(span, httpServletRequest.getMethod());
                     span.setComponent(ComponentsDefine.SPRING_MVC_ANNOTATION);
                     SpanLayer.asHttp(span);
-
+                    // 记录 HTTP 参数信息
                     if (SpringMVCPluginConfig.Plugin.SpringMVC.COLLECT_HTTP_PARAMS) {
                         RequestUtil.collectHttpParam(httpServletRequest, span);
                     }
-
+                    // 包括 HTTP 标头
                     if (!CollectionUtil.isEmpty(SpringMVCPluginConfig.Plugin.Http.INCLUDE_HTTP_HEADERS)) {
                         RequestUtil.collectHttpHeaders(httpServletRequest, span);
                     }

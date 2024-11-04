@@ -103,15 +103,19 @@ public class ContextManager implements BootService {
         operationName = StringUtil.cut(operationName, OPERATION_NAME_THRESHOLD);
         // 判断是否采样
         if (carrier != null && carrier.isValid()) {
+            // 在Span数据没有跨进程、跨线程的时候，是不会走到这里的 因为carrier里没有值
             SamplingService samplingService = ServiceManager.INSTANCE.findService(SamplingService.class);
             samplingService.forceSampled();
             // 这里一定要强制采样 否则链路可能会断开 segment 已存在 否则链路就会断开
             context = getOrCreate(operationName, true);
+            // 创建一个新的Span并放入SpanStack中
             span = context.createEntrySpan(operationName);
+            // 从 carrier 中取出上层Segment和Span信息，并将本地创建的Span和Segment信息进行关联
             context.extract(carrier);
         } else {
             // 这里不需要强制采样 根据采样率决定当前的链路是否采样
             context = getOrCreate(operationName, false);
+            // 创建成功
             span = context.createEntrySpan(operationName);
         }
         return span;
@@ -128,8 +132,11 @@ public class ContextManager implements BootService {
             throw new IllegalArgumentException("ContextCarrier can't be null.");
         }
         operationName = StringUtil.cut(operationName, OPERATION_NAME_THRESHOLD);
+        // 获取 TracerContext 对象
         AbstractTracerContext context = getOrCreate(operationName, false);
+        // 开始创建
         AbstractSpan span = context.createExitSpan(operationName, remotePeer);
+        // 将当前的Segment的信息写入carrier中
         context.inject(carrier);
         return span;
     }

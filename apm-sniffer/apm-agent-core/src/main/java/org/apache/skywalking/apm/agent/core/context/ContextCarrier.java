@@ -31,7 +31,7 @@ import org.apache.skywalking.apm.util.StringUtil;
  * {@link ContextCarrier} is a data carrier of {@link TracingContext}. It holds the snapshot (current state) of {@link
  * TracingContext}.
  * <p>
- * 数据传输载体
+ * 数据传输载体-跨进程传输数据
  */
 @Setter(AccessLevel.PACKAGE)
 public class ContextCarrier implements Serializable {
@@ -74,12 +74,13 @@ public class ContextCarrier implements Serializable {
     private CorrelationContext correlationContext = new CorrelationContext();
 
     /**
+     * 链表结构，这些项可以存在于当前跟踪上下文中
+     *
      * @return the list of items, which could exist in the current tracing context.
      */
     public CarrierItem items() {
         SW8ExtensionCarrierItem sw8ExtensionCarrierItem = new SW8ExtensionCarrierItem(extensionContext, null);
-        SW8CorrelationCarrierItem sw8CorrelationCarrierItem = new SW8CorrelationCarrierItem(
-                correlationContext, sw8ExtensionCarrierItem);
+        SW8CorrelationCarrierItem sw8CorrelationCarrierItem = new SW8CorrelationCarrierItem(correlationContext, sw8ExtensionCarrierItem);
         SW8CarrierItem sw8CarrierItem = new SW8CarrierItem(this, sw8CorrelationCarrierItem);
         return new CarrierItemHead(sw8CarrierItem);
     }

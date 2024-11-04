@@ -91,6 +91,7 @@ public class DefaultHttpClientInterceptor implements InstanceMethodsAroundInterc
         if (operationName.length() == 0) {
             operationName = "/";
         }
+        // 创建ExitSpan
         AbstractSpan span = ContextManager.createExitSpan(operationName, contextCarrier, remotePeer);
         span.setComponent(ComponentsDefine.FEIGN);
         Tags.HTTP.METHOD.set(span, request.method());
@@ -114,6 +115,7 @@ public class DefaultHttpClientInterceptor implements InstanceMethodsAroundInterc
 
         if (FIELD_HEADERS_OF_REQUEST != null) {
             Map<String, Collection<String>> headers = new LinkedHashMap<String, Collection<String>>();
+            // 链表遍历 写数据
             CarrierItem next = contextCarrier.items();
             while (next.hasNext()) {
                 next = next.next();
@@ -122,7 +124,7 @@ public class DefaultHttpClientInterceptor implements InstanceMethodsAroundInterc
                 headers.put(next.getHeadKey(), contextCollection);
             }
             headers.putAll(request.headers());
-
+            // 封装feign请求头
             FIELD_HEADERS_OF_REQUEST.set(request, Collections.unmodifiableMap(headers));
         }
     }

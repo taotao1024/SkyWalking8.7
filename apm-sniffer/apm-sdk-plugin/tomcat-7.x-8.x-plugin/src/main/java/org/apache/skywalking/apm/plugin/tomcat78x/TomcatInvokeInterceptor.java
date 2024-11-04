@@ -66,16 +66,20 @@ public class TomcatInvokeInterceptor implements InstanceMethodsAroundInterceptor
     @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes,
                              MethodInterceptResult result) throws Throwable {
+        // 将该方法的第一个参数 转换成 Request 类型
         Request request = (Request) allArguments[0];
+        // 创建一个 数据载体
         ContextCarrier contextCarrier = new ContextCarrier();
-
+        // 遍历链表 这里 contextCarrier 是空的
         CarrierItem next = contextCarrier.items();
         while (next.hasNext()) {
             next = next.next();
             next.setHeadValue(request.getHeader(next.getHeadKey()));
         }
 
+        // 设置Span内容
         AbstractSpan span = ContextManager.createEntrySpan(request.getRequestURI(), contextCarrier);
+        //  Tags 中放入附加的内容
         Tags.URL.set(span, request.getRequestURL().toString());
         Tags.HTTP.METHOD.set(span, request.getMethod());
         span.setComponent(ComponentsDefine.TOMCAT);
@@ -102,7 +106,7 @@ public class TomcatInvokeInterceptor implements InstanceMethodsAroundInterceptor
             collectHttpParam(request, span);
         }
         ContextManager.getRuntimeContext().remove(Constants.FORWARD_REQUEST_FLAG);
-        // 每当 插件调用 stopSpan()时 九江 stackDepth-1
+        // 每当 插件调用 stopSpan()时 就将 stackDepth-1
         ContextManager.stopSpan();
         return ret;
     }

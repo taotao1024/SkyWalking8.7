@@ -35,4 +35,6 @@ replay_pid*
 skywalking-agent/
 *\*.proto
 *\dependency-reduced-pom.xml
-*\target\
+oap-server/*/target/*
+oap-server\*\target\*
+*/*/target\*

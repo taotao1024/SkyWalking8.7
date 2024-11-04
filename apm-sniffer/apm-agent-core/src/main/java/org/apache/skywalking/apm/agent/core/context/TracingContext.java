@@ -379,6 +379,7 @@ public class TracingContext implements AbstractTracerContext {
         }
 
         AbstractSpan exitSpan;
+        // 从SpanStack 中去除Span信息，不会删除stack中的这个Span
         AbstractSpan parentSpan = peek();
         TracingContext owner = this;
         if (parentSpan != null && parentSpan.isExit()) {
