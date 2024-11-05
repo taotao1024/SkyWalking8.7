@@ -49,6 +49,9 @@ public class TraceIgnoreExtendService extends SamplingService {
 
         IgnoreConfigInitializer.initialize();
         if (StringUtil.isNotEmpty(IgnoreConfig.Trace.IGNORE_PATH)) {
+            // `/agent/optional-plugins/apm-trace-ignore-plugin/apm-trace-ignore-plugin.config` to `/agent/config/
+            // skywalking-agent/config/apm-trace-ignore-plugin.config
+            // trace.ignore_path=${SW_AGENT_TRACE_IGNORE_PATH:/eureka/**}
             patterns = IgnoreConfig.Trace.IGNORE_PATH.split(PATTERN_SEPARATOR);
         }
 
@@ -71,6 +74,7 @@ public class TraceIgnoreExtendService extends SamplingService {
     @Override
     public boolean trySampling(final String operationName) {
         if (patterns.length > 0) {
+            // 匹配 是否忽略该 链路上报
             for (String pattern : patterns) {
                 if (pathMatcher.match(pattern, operationName)) {
                     LOGGER.debug("operationName : " + operationName + " Ignore tracking");
