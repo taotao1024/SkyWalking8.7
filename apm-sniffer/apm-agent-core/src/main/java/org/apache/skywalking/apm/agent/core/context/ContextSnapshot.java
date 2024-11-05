@@ -25,7 +25,7 @@ import org.apache.skywalking.apm.agent.core.context.ids.DistributedTraceId;
  * The <code>ContextSnapshot</code> is a snapshot for current context. The snapshot carries the info for building
  * reference between two segments in two thread, but have a causal relationship.
  * <p>
- * 数据传输载体-ContextSnapshot
+ * 数据传输载体-跨线程传输数据
  */
 @Getter
 public class ContextSnapshot {

@@ -79,7 +79,7 @@ public class TracingContext implements AbstractTracerContext {
 
     /**
      * The final {@link TraceSegment}, which includes all finished spans.
-     * 一个TracingContext 对应一个 TraceSegment
+     * 一个 TracingContext 对应一个 TraceSegment
      */
     private TraceSegment segment;
 
@@ -416,11 +416,15 @@ public class TracingContext implements AbstractTracerContext {
      */
     @Override
     public boolean stopSpan(AbstractSpan span) {
+        // 从栈顶区取出一个Span
         AbstractSpan lastSpan = peek();
+        // 对比两者是否相同
         if (lastSpan == span) {
             if (lastSpan instanceof AbstractTracingSpan) {
+                // 将当前的ExitSpan放入到TraceSegment的Spans属性中
                 AbstractTracingSpan toFinishSpan = (AbstractTracingSpan) lastSpan;
                 if (toFinishSpan.finish(segment)) {
+                    // 从栈顶将ExitSpan删除
                     pop();
                 }
             } else {
@@ -429,7 +433,7 @@ public class TracingContext implements AbstractTracerContext {
         } else {
             throw new IllegalStateException("Stopping the unexpected span = " + span);
         }
-
+        // 数据发送
         finish();
 
         return activeSpanStack.isEmpty();
@@ -453,6 +457,7 @@ public class TracingContext implements AbstractTracerContext {
     @Override
     public void asyncStop(AsyncSpan span) {
         ASYNC_SPAN_COUNTER_UPDATER.decrementAndGet(this);
+        // 数据发送
         finish();
     }
 
@@ -477,6 +482,8 @@ public class TracingContext implements AbstractTracerContext {
     }
 
     /**
+     * 将链路追踪的数据发送出去
+     *
      * Finish this context, and notify all {@link TracingContextListener}s, managed by {@link
      * TracingContext.ListenerManager} and {@link TracingContext.TracingThreadListenerManager}
      */
@@ -498,6 +505,7 @@ public class TracingContext implements AbstractTracerContext {
             if (isFinishedInMainThread && (!isRunningInAsyncMode || asyncSpanCounter == 0)) {
                 // 发送通知
                 TraceSegment finishedSegment = segment.finish(isLimitMechanismWorking());
+                // 将链路追踪的数据发送出去
                 TracingContext.ListenerManager.notifyFinish(finishedSegment);
                 running = false;
             }

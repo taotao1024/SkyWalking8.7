@@ -46,6 +46,10 @@ public class CacheIpsInstrumentation extends AbstractMysqlInstrumentation {
                     return named("connect");
                 }
 
+                /**
+                 * {@link org.apache.skywalking.apm.plugin.jdbc.mysql.DriverConnectInterceptor}
+                 * @return 类的全限定路径
+                 */
                 @Override
                 public String getMethodsInterceptor() {
                     return DRIVER_CONNECT_INTERCEPTOR;

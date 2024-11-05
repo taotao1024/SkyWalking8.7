@@ -20,6 +20,14 @@ package org.apache.skywalking.apm.toolkit.trace;
 
 import java.util.function.Supplier;
 
+/**
+ * 处理线程交叉的埋点
+ * <p>
+ * SkyWalking 官方文档
+ * https://skywalking.apache.org/docs/skywalking-java/v9.0.0/en/setup/service-agent/java-agent/application-toolkit-trace-cross-thread/
+ *
+ * @param <V>
+ */
 @TraceCrossThread
 public class SupplierWrapper<V> implements Supplier<V> {
     final Supplier<V> supplier;

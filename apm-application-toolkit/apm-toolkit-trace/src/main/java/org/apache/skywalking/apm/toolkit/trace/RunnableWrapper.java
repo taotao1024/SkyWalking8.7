@@ -17,6 +17,12 @@
 
 package org.apache.skywalking.apm.toolkit.trace;
 
+/**
+ * 处理线程交叉的埋点
+ * <p>
+ * SkyWalking 官方文档
+ * https://skywalking.apache.org/docs/skywalking-java/v9.0.0/en/setup/service-agent/java-agent/application-toolkit-trace-cross-thread/
+ */
 @TraceCrossThread
 public class RunnableWrapper implements Runnable {
     final Runnable runnable;

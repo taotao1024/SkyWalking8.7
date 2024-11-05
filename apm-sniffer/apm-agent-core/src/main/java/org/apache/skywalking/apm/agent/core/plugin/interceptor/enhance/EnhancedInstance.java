@@ -19,6 +19,11 @@
 package org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance;
 
 public interface EnhancedInstance {
+    /**
+     * 获取上一层传递的信息
+     *
+     * @return
+     */
     Object getSkyWalkingDynamicField();
 
     void setSkyWalkingDynamicField(Object value);

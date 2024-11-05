@@ -25,6 +25,7 @@ public class CallableOrRunnableConstructInterceptor implements InstanceConstruct
     @Override
     public void onConstruct(EnhancedInstance objInst, Object[] allArguments) {
         if (ContextManager.isActive()) {
+            // 执行构造方法时，生成一个跨线程的数据载体
             objInst.setSkyWalkingDynamicField(ContextManager.capture());
         }
     }

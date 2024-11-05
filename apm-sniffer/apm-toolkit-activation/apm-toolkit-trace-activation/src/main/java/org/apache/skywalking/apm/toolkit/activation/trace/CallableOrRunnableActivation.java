@@ -30,13 +30,25 @@ import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 import static org.apache.skywalking.apm.agent.core.plugin.match.ClassAnnotationMatch.byClassAnnotationMatch;
 
 /**
+ * 跨线程的链路监控
+ * <p>
  * {@link CallableOrRunnableActivation} presents that skywalking intercepts all Class with annotation
  * "org.skywalking.apm.toolkit.trace.TraceCrossThread" and method named "call" or "run".
  */
 public class CallableOrRunnableActivation extends ClassInstanceMethodsEnhancePluginDefine {
-
+    /**
+     * 拦截的类
+     * <p>
+     * {@link org.apache.skywalking.apm.toolkit.trace.TraceCrossThread}
+     */
     public static final String ANNOTATION_NAME = "org.apache.skywalking.apm.toolkit.trace.TraceCrossThread";
+    /**
+     * {@link org.apache.skywalking.apm.toolkit.activation.trace.CallableOrRunnableConstructInterceptor}
+     */
     private static final String INIT_METHOD_INTERCEPTOR = "org.apache.skywalking.apm.toolkit.activation.trace.CallableOrRunnableConstructInterceptor";
+    /**
+     * {@link org.apache.skywalking.apm.toolkit.activation.trace.CallableOrRunnableInvokeInterceptor}
+     */
     private static final String CALL_METHOD_INTERCEPTOR = "org.apache.skywalking.apm.toolkit.activation.trace.CallableOrRunnableInvokeInterceptor";
     private static final String CALL_METHOD_NAME = "call";
     private static final String RUN_METHOD_NAME = "run";

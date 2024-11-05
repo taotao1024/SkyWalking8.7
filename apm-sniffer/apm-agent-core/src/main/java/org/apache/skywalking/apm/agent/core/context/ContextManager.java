@@ -160,6 +160,10 @@ public class ContextManager implements BootService {
         }
     }
 
+    /**
+     * 跨线程传播数据
+     * @return
+     */
     public static ContextSnapshot capture() {
         return get().capture();
     }
@@ -169,6 +173,7 @@ public class ContextManager implements BootService {
             throw new IllegalArgumentException("ContextSnapshot can't be null.");
         }
         if (!snapshot.isFromCurrent()) {
+            // 跨线程传播数据
             get().continued(snapshot);
         }
     }

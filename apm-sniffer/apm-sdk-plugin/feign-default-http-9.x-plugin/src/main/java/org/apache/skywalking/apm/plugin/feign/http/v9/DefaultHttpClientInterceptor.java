@@ -151,6 +151,7 @@ public class DefaultHttpClientInterceptor implements InstanceMethodsAroundInterc
     @Override
     public Object afterMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes,
                               Object ret) {
+        // 获取到 feign 的相应
         Response response = (Response) ret;
         if (response != null) {
             int statusCode = response.status();
@@ -161,7 +162,7 @@ public class DefaultHttpClientInterceptor implements InstanceMethodsAroundInterc
                 Tags.STATUS_CODE.set(span, Integer.toString(statusCode));
             }
         }
-
+        // 将 Feign 在 beforeMethod() 中创建的 ExitSpan 放到 TraceSegment 中，并尝试将Segment结束。
         ContextManager.stopSpan();
 
         return ret;

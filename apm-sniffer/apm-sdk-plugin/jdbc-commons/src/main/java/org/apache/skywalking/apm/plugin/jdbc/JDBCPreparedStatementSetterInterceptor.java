@@ -33,6 +33,7 @@ public class JDBCPreparedStatementSetterInterceptor implements InstanceMethodsAr
         if (statementEnhanceInfos != null) {
           final int index = (Integer) allArguments[0];
           final Object parameter = allArguments[1];
+          // 设置信息
           statementEnhanceInfos.setParameter(index, parameter);
         }
     }

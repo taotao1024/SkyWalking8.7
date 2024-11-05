@@ -30,6 +30,7 @@ public class CallableOrRunnableInvokeInterceptor implements InstanceMethodsAroun
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes,
         MethodInterceptResult result) throws Throwable {
         ContextManager.createLocalSpan("Thread/" + objInst.getClass().getName() + "/" + method.getName());
+        // 跨线程传播数据的载体 ContextSnapshot
         ContextSnapshot cachedObjects = (ContextSnapshot) objInst.getSkyWalkingDynamicField();
         if (cachedObjects != null) {
             ContextManager.continued(cachedObjects);
