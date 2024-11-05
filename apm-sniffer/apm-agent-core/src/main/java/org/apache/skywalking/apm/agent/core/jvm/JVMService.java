@@ -62,11 +62,13 @@ public class JVMService implements BootService, Runnable {
 
     @Override
     public void prepare() throws Throwable {
+        // 由于在SPI中, JVMMetricsSender 先被加载，所以 JVMService 可以获取到该对象
         sender = ServiceManager.INSTANCE.findService(JVMMetricsSender.class);
     }
 
     @Override
     public void boot() throws Throwable {
+        // 收集JVM信息的定时任务 1s 执行一次
         collectMetricFuture = Executors.newSingleThreadScheduledExecutor(
             new DefaultNamedThreadFactory("JVMService-produce"))
                                        .scheduleAtFixedRate(new RunnableWithExceptionProtection(
@@ -78,6 +80,7 @@ public class JVMService implements BootService, Runnable {
                                                }
                                            }
                                        ), 0, 1, TimeUnit.SECONDS);
+        // 发送JVM信息的定时任务 1s 执行一次
         sendMetricFuture = Executors.newSingleThreadScheduledExecutor(
             new DefaultNamedThreadFactory("JVMService-consume"))
                                     .scheduleAtFixedRate(new RunnableWithExceptionProtection(
@@ -106,6 +109,7 @@ public class JVMService implements BootService, Runnable {
     public void run() {
         long currentTimeMillis = System.currentTimeMillis();
         try {
+            // JVMMetric gRpc 中定义的通讯对象
             JVMMetric.Builder jvmBuilder = JVMMetric.newBuilder();
             jvmBuilder.setTime(currentTimeMillis);
             // 获取CPU信息
@@ -117,7 +121,7 @@ public class JVMService implements BootService, Runnable {
             jvmBuilder.addAllGc(GCProvider.INSTANCE.getGCList());
             jvmBuilder.setThread(ThreadProvider.INSTANCE.getThreadMetrics());
             jvmBuilder.setClazz(ClassProvider.INSTANCE.getClassMetrics());
-
+            // 发送数据
             sender.offer(jvmBuilder.build());
         } catch (Exception e) {
             LOGGER.error(e, "Collect JVM info fail.");

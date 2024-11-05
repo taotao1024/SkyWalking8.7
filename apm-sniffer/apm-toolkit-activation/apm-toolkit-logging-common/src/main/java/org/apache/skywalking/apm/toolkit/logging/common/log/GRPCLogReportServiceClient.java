@@ -68,11 +68,13 @@ public class GRPCLogReportServiceClient extends LogReportServiceClient {
 
     @Override
     public void boot() throws Throwable {
+        // 定义数据
         carrier = new DataCarrier<>("gRPC-log", "gRPC-log",
                                     Config.Buffer.CHANNEL_SIZE,
                                     Config.Buffer.BUFFER_SIZE,
                                     BufferStrategy.IF_POSSIBLE
         );
+        // 定义自己是消费者
         carrier.consume(this, 1);
         channel = ManagedChannelBuilder
             .forAddress(
@@ -100,6 +102,11 @@ public class GRPCLogReportServiceClient extends LogReportServiceClient {
         }
     }
 
+    /**
+     * 生产者
+     * logback|log4j|log4j2
+     * @param logData
+     */
     @Override
     public void produce(LogData logData) {
         if (Objects.nonNull(logData) && !carrier.produce(logData)) {
@@ -116,33 +123,39 @@ public class GRPCLogReportServiceClient extends LogReportServiceClient {
         }
         StreamObserver<LogData> reportStreamObserver = null;
         final GRPCStreamServiceStatus waitStatus = new GRPCStreamServiceStatus(false);
+        //  发送数据到OAP端
         try {
             reportStreamObserver = asyncStub.withDeadlineAfter(
-                ToolkitConfig.Plugin.Toolkit.Log.GRPC.Reporter.UPSTREAM_TIMEOUT, TimeUnit.SECONDS
-            ).collect(new StreamObserver<Commands>() {
-                @Override
-                public void onNext(Commands commands) {
-                }
+                    ToolkitConfig.Plugin.Toolkit.Log.GRPC.Reporter.UPSTREAM_TIMEOUT, TimeUnit.SECONDS
+            ).collect( // gRpc 流式发送数据
+                    new StreamObserver<Commands>() {
+                        @Override
+                        public void onNext(Commands commands) {
+                            // 服务端应答
+                        }
 
-                @Override
-                public void onError(Throwable t) {
-                    waitStatus.finished();
-                    if (disconnected.compareAndSet(false, true)) {
-                        LOGGER.error("Send log to gRPC server fail with an internal exception.", t);
-                    }
+                        @Override
+                        public void onError(Throwable t) {
+                            // 服务端应答失败
+                            waitStatus.finished();
+                            if (disconnected.compareAndSet(false, true)) {
+                                LOGGER.error("Send log to gRPC server fail with an internal exception.", t);
+                            }
 
-                    LOGGER.error(t, "Try to send {} log data to collector, with unexpected exception.",
-                                 dataList.size()
-                    );
-                }
+                            LOGGER.error(t, "Try to send {} log data to collector, with unexpected exception.",
+                                    dataList.size()
+                            );
+                        }
 
-                @Override
-                public void onCompleted() {
-                    disconnected.compareAndSet(true, false);
-                    waitStatus.finished();
-                }
-            });
+                        @Override
+                        public void onCompleted() {
+                            // 服务端应答成功
+                            disconnected.compareAndSet(true, false);
+                            waitStatus.finished();
+                        }
+                    });
 
+            // 遍历日志数据 多次请求
             for (final LogData logData : dataList) {
                 reportStreamObserver.onNext(logData);
             }
@@ -152,8 +165,10 @@ public class GRPCLogReportServiceClient extends LogReportServiceClient {
             }
         } finally {
             if (reportStreamObserver != null) {
+                // 数据发送完成
                 reportStreamObserver.onCompleted();
             }
+            // 等待并关闭
             waitStatus.wait4Finish();
         }
     }

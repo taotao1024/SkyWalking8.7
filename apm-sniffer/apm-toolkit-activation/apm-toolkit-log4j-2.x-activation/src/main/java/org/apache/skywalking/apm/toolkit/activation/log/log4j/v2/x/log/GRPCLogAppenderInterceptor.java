@@ -39,6 +39,9 @@ import org.apache.skywalking.apm.network.logging.v3.TextLog;
 import org.apache.skywalking.apm.network.logging.v3.TraceContext;
 import org.apache.skywalking.apm.toolkit.logging.common.log.ToolkitConfig;
 
+/**
+ * 字节码增强
+ */
 public class GRPCLogAppenderInterceptor implements InstanceMethodsAroundInterceptor {
 
     private LogReportServiceClient client;

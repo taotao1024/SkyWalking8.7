@@ -39,6 +39,9 @@ import org.apache.skywalking.apm.network.language.agent.v3.JVMMetricReportServic
 
 import static org.apache.skywalking.apm.agent.core.conf.Config.Collector.GRPC_UPSTREAM_TIMEOUT;
 
+/**
+ * JVM信息发送工具
+ */
 @DefaultImplementor
 public class JVMMetricsSender implements BootService, Runnable, GRPCChannelListener {
     private static final ILog LOGGER = LogManager.getLogger(JVMMetricsSender.class);
@@ -50,7 +53,10 @@ public class JVMMetricsSender implements BootService, Runnable, GRPCChannelListe
 
     @Override
     public void prepare() {
+        // 创建一个 先进先出 的阻塞队列
         queue = new LinkedBlockingQueue<>(Config.Jvm.BUFFER_SIZE);
+        // 获取到已经启动完成的 GRPCChannelManager 对象，并把自己注册到 GRPCChannelManager 对象的 listener 中
+        // 方便后续监听gRpc的链接状态
         ServiceManager.INSTANCE.findService(GRPCChannelManager.class).addChannelListener(this);
     }
 
@@ -61,6 +67,7 @@ public class JVMMetricsSender implements BootService, Runnable, GRPCChannelListe
 
     public void offer(JVMMetric metric) {
         // drop last message and re-deliver
+        // 丢弃最后一条消息并重新投递
         if (!queue.offer(metric)) {
             queue.poll();
             queue.offer(metric);
@@ -74,6 +81,7 @@ public class JVMMetricsSender implements BootService, Runnable, GRPCChannelListe
                 JVMMetricCollection.Builder builder = JVMMetricCollection.newBuilder();
                 LinkedList<JVMMetric> buffer = new LinkedList<>();
                 queue.drainTo(buffer);
+                // 如果获取到了 JVM Metric 数据
                 if (buffer.size() > 0) {
                     builder.addAllMetrics(buffer);
                     builder.setService(Config.Agent.SERVICE_NAME);

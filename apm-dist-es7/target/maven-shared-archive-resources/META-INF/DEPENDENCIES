@@ -113,8 +113,6 @@ From: 'an unknown organization'
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - javax.inject (http://code.google.com/p/atinject/) javax.inject:javax.inject:jar:1
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
-  - Byte Buddy (without dependencies) (https://bytebuddy.net/byte-buddy) net.bytebuddy:byte-buddy:jar:1.10.19
-    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - Failsafe (http://github.com/jhalterman/failsafe/) net.jodah:failsafe:jar:2.3.4
     License: Apache License, Version 2.0  (http://apache.org/licenses/LICENSE-2.0)
   - JOpt Simple (http://pholser.github.com/jopt-simple) net.sf.jopt-simple:jopt-simple:jar:4.6
@@ -472,8 +470,6 @@ From: 'The Apache Software Foundation' (https://www.apache.org/)
   - agent-analyzer (https://github.com/apache/skywalking/oap-server/analyzer/agent-analyzer) org.apache.skywalking:agent-analyzer:jar:8.7.0
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - apm-agent (http://maven.apache.org) org.apache.skywalking:apm-agent:jar:8.7.0
-    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
-  - apm-agent-core (http://maven.apache.org) org.apache.skywalking:apm-agent-core:jar:8.7.0
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - apm-datacarrier (http://maven.apache.org/apm-datacarrier) org.apache.skywalking:apm-datacarrier:jar:8.7.0
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)

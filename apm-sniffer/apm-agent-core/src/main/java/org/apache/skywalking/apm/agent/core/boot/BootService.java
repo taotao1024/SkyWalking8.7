@@ -33,6 +33,7 @@ package org.apache.skywalking.apm.agent.core.boot;
  * 的CPU消耗以及网络带宽，如果开启采样，SkyWalking Agent并不会把所有的链路都发送给OAP。默认
  * 采样是开启的，可以通过修改agent.config中的agent.sample_n_per_3_secs配置项控制每3秒最多采样
  * 多少条链路
+ * GRPCLogReportServiceClient   日志发送
  */
 public interface BootService {
     /**

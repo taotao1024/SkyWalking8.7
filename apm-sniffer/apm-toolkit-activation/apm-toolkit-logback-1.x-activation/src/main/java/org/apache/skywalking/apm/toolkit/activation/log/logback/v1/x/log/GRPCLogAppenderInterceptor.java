@@ -49,14 +49,17 @@ public class GRPCLogAppenderInterceptor implements InstanceMethodsAroundIntercep
     @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes,
                              MethodInterceptResult result) throws Throwable {
+        // 获取 LogReportServiceClient 日志发送对象
         if (Objects.isNull(client)) {
             client = ServiceManager.INSTANCE.findService(LogReportServiceClient.class);
             if (Objects.isNull(client)) {
                 return;
             }
         }
+        // 获取到 第一个参数
         ILoggingEvent event = (ILoggingEvent) allArguments[0];
         if (Objects.nonNull(event)) {
+            // transform() 收集、格式化、整理成LogReport能够发送的数据格式
             client.produce(transform((OutputStreamAppender<ILoggingEvent>) objInst, event));
         }
     }
@@ -81,6 +84,7 @@ public class GRPCLogAppenderInterceptor implements InstanceMethodsAroundIntercep
      * @return {@link LogData} with filtered trace context in order to reduce the cost on the network
      */
     private LogData transform(final OutputStreamAppender<ILoggingEvent> appender, ILoggingEvent event) {
+        // 整理logData中logTags数据
         LogTags.Builder logTags = LogTags.newBuilder()
                 .addData(KeyStringValuePair.newBuilder()
                         .setKey("level").setValue(event.getLevel().toString()).build())
@@ -104,14 +108,19 @@ public class GRPCLogAppenderInterceptor implements InstanceMethodsAroundIntercep
                         .setKey("exception").setValue(ThrowableTransformer.INSTANCE.convert2String(throwable, 2048)).build());
             }
         }
-
+        // 整理日志体
         LogData.Builder builder = LogData.newBuilder()
                 .setTimestamp(event.getTimeStamp())
                 .setService(Config.Agent.SERVICE_NAME)
                 .setServiceInstance(Config.Agent.INSTANCE_NAME)
                 .setTags(logTags.build())
-                .setBody(LogDataBody.newBuilder().setType(LogDataBody.ContentCase.TEXT.name())
-                                    .setText(TextLog.newBuilder().setText(transformLogText(appender, event)).build()).build());
+                // 设置 日志体 格式
+                .setBody(LogDataBody.newBuilder()
+                        .setType(LogDataBody.ContentCase.TEXT.name())
+                        // 格式化具体的日志
+                        .setText(TextLog.newBuilder().setText(transformLogText(appender, event)).build()).build()
+                );
+        // 把日志链路跟踪信息进行绑定
         return -1 == ContextManager.getSpanId() ? builder.build()
                 : builder.setTraceContext(TraceContext.newBuilder()
                         .setTraceId(ContextManager.getGlobalTraceId())
