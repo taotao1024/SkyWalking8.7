@@ -33,8 +33,9 @@ replay_pid*
 
 # SkyWalking
 skywalking-agent/
-*\*.proto
 *\dependency-reduced-pom.xml
 oap-server/*/target/*
-oap-server\*\target\*
-*/*/target\*
+
+# SkyWalking-UI
+/skywalking-ui/node_modules/
+/package-lock.json
