@@ -33,11 +33,14 @@ public class MetricsHolder {
     private static volatile boolean INITIALIZED = false;
 
     private static void init() throws IOException {
+        // 根据自己的classLoader获取到ClassPath信息
         ClassPath classpath = ClassPath.from(MetricsHolder.class.getClassLoader());
+        // 到ClassPath中根据类前缀找到所有能使用的ClassInfo
         ImmutableSet<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive("org.apache.skywalking");
+        // 遍历所有的ClassInfo
         for (ClassPath.ClassInfo classInfo : classes) {
             Class<?> aClass = classInfo.load();
-
+            // 是否包含@MetricsFunction注解
             if (aClass.isAnnotationPresent(MetricsFunction.class)) {
                 MetricsFunction metricsFunction = aClass.getAnnotation(MetricsFunction.class);
                 REGISTER.put(

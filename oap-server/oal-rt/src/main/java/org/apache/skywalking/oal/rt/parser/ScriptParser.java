@@ -54,15 +54,16 @@ public class ScriptParser {
     }
 
     public OALScripts parse() throws IOException {
+        // 初始化OALScripts对象
         OALScripts scripts = new OALScripts();
-
+        // 把词法解析的结果进行token流的转换
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-
+        // 拿着token流进行语法分析
         OALParser parser = new OALParser(tokens);
 
         ParseTree tree = parser.root();
         ParseTreeWalker walker = new ParseTreeWalker();
-
+        // 注册OALListener的监听器 后续才会执行OALListener中每个enter、exit方法
         walker.walk(new OALListener(scripts, sourcePackage), tree);
 
         return scripts;

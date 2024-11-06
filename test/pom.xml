@@ -11,7 +11,7 @@
     <artifactId>test</artifactId>
 
     <modules>
-        <module>apm-test-agent</module>
+        <!--<module>apm-test-agent</module>-->
     </modules>
 
 </project>

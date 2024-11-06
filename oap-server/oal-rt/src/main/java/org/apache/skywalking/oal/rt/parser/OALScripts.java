@@ -20,10 +20,17 @@ package org.apache.skywalking.oal.rt.parser;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import lombok.Getter;
 
+/**
+ * 用来存储被 *.g4 解析的文件
+ */
 @Getter
 public class OALScripts {
+    /**
+     * AnalysisResult 解析结果
+     */
     private List<AnalysisResult> metricsStmts;
     private DisableCollection disableCollection;
 

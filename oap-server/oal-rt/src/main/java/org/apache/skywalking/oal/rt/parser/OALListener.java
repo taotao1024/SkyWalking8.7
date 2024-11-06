@@ -35,6 +35,7 @@ public class OALListener extends OALParserBaseListener {
     private final String sourcePackage;
 
     public OALListener(OALScripts scripts, String sourcePackage) {
+        // 获取到OALScripts中metricsStmts 属性,根OALListener中的results属性进行关联
         this.results = scripts.getMetricsStmts();
         this.collection = scripts.getDisableCollection();
         this.sourcePackage = sourcePackage;
@@ -47,6 +48,7 @@ public class OALListener extends OALParserBaseListener {
 
     @Override
     public void exitAggregationStatement(@NotNull OALParser.AggregationStatementContext ctx) {
+        // 深度分析
         DeepAnalysis deepAnalysis = new DeepAnalysis();
         results.add(deepAnalysis.analysis(current));
         current = null;
