@@ -34,19 +34,24 @@ import org.apache.skywalking.oap.server.telemetry.api.MetricsTag;
 public class OAPServerBootstrap {
     public static void start() {
         String mode = System.getProperty("mode");
+        // no-init 在启动过程中 不会创建存储结构
+        // init    在启动过程中 创建存储结构
+        // OAP-server 以 no-init 作为判断条件
         RunningMode.setMode(mode);
 
         ApplicationConfigLoader configLoader = new ApplicationConfigLoader();
         ModuleManager manager = new ModuleManager();
         try {
+            // 配置加载
             ApplicationConfiguration applicationConfiguration = configLoader.load();
+            // 初始化给定的模块
             manager.init(applicationConfiguration);
 
             manager.find(TelemetryModule.NAME)
                    .provider()
                    .getService(MetricsCreator.class)
                    .createGauge("uptime", "oap server start up time", MetricsTag.EMPTY_KEY, MetricsTag.EMPTY_VALUE)
-                   // Set uptime to second
+                   // Set uptime to second 将正常运行时间设置为秒
                    .setValue(System.currentTimeMillis() / 1000d);
 
             if (RunningMode.isInitMode()) {

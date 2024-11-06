@@ -88,11 +88,13 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
 
         LOGGER.info("Prepare the {} provider in {} module.", loadedProvider.name(), this.name());
         try {
+            // 配置项复制
             copyProperties(loadedProvider.createConfigBeanIfAbsent(), configuration.getProviderConfiguration(loadedProvider
                 .name()), this.name(), loadedProvider.name());
         } catch (IllegalAccessException e) {
             throw new ModuleConfigException(this.name() + " module config transport to config bean failure.", e);
         }
+        // 在 prepare 阶段，moduleDefine 应该初始化与其他模块无关的东西。
         loadedProvider.prepare();
     }
 

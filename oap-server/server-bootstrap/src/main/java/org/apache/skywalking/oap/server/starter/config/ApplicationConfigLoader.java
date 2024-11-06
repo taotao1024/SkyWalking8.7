@@ -46,8 +46,11 @@ public class ApplicationConfigLoader implements ConfigLoader<ApplicationConfigur
 
     @Override
     public ApplicationConfiguration load() throws ConfigFileNotFoundException {
+        // 核心配置类 负责application.yml的装载
         ApplicationConfiguration configuration = new ApplicationConfiguration();
+        // 加载配置文件
         this.loadConfig(configuration);
+        // 替换占位符
         this.overrideConfigBySystemEnv(configuration);
         return configuration;
     }
@@ -58,10 +61,12 @@ public class ApplicationConfigLoader implements ConfigLoader<ApplicationConfigur
             Reader applicationReader = ResourceUtils.read("application.yml");
             Map<String, Map<String, Object>> moduleConfig = yaml.loadAs(applicationReader, Map.class);
             if (CollectionUtils.isNotEmpty(moduleConfig)) {
+                // 过滤出已选择的配置
                 selectConfig(moduleConfig);
                 moduleConfig.forEach((moduleName, providerConfig) -> {
                     if (providerConfig.size() > 0) {
                         log.info("Get a module define from application.yml, module name: {}", moduleName);
+                        // ApplicationConfiguration 添加Module: cluster、core、storage、agent-analyzer 等
                         ApplicationConfiguration.ModuleConfiguration moduleConfiguration = configuration.addModule(
                             moduleName);
                         providerConfig.forEach((providerName, config) -> {
@@ -135,15 +140,20 @@ public class ApplicationConfigLoader implements ConfigLoader<ApplicationConfigur
         Iterator<Map.Entry<String, Map<String, Object>>> moduleIterator = moduleConfiguration.entrySet().iterator();
         while (moduleIterator.hasNext()) {
             Map.Entry<String, Map<String, Object>> entry = moduleIterator.next();
+            // 这儿获取到迭代对象的Key,就是storage
             final String moduleName = entry.getKey();
+            // 这儿取到迭代对象storage下所有的配置
             final Map<String, Object> providerConfig = entry.getValue();
+            //  判断是否存在 selector选项
             if (!providerConfig.containsKey(SELECTOR)) {
                 continue;
             }
             final String selector = (String) providerConfig.get(SELECTOR);
+            // 处理环境变量问题
             final String resolvedSelector = PropertyPlaceholderHelper.INSTANCE.replacePlaceholders(
                 selector, System.getProperties()
             );
+            // 迭代map的子项中 是否包含selector 不匹配则移除配置子项
             providerConfig.entrySet().removeIf(e -> !resolvedSelector.equals(e.getKey()));
 
             if (!providerConfig.isEmpty()) {

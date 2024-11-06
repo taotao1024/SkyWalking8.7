@@ -58,11 +58,15 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
 
     /**
      * In prepare stage, the moduleDefine should initialize things which are irrelative other modules.
+     * <p>
+     * 在 prepare 阶段，moduleDefine 应该初始化与其他模块无关的东西。
      */
     public abstract void prepare() throws ServiceNotProvidedException, ModuleStartException;
 
     /**
      * In start stage, the moduleDefine has been ready for interop.
+     * <p>
+     * 在 start 阶段，moduleDefine 已准备好进行互操作。
      */
     public abstract void start() throws ServiceNotProvidedException, ModuleStartException;
 
@@ -91,6 +95,7 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
 
     /**
      * Make sure all required services have been implemented.
+     * {@link org.apache.skywalking.oap.server.core.CoreModule#services()}
      *
      * @param requiredServices must be implemented by the moduleDefine.
      * @throws ServiceNotProvidedException when exist unimplemented service.
@@ -98,7 +103,8 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
     void requiredCheck(Class<? extends Service>[] requiredServices) throws ServiceNotProvidedException {
         if (requiredServices == null)
             return;
-
+        // 在ModuleProvider的prepare方法中初始化所有的service
+        // 都需要跟moduleDefine中的services方法中 定义的 Class[] 中的每一个元素一一对应
         for (Class<? extends Service> service : requiredServices) {
             if (!services.containsKey(service)) {
                 throw new ServiceNotProvidedException("Service:" + service.getName() + " not provided");

@@ -34,30 +34,37 @@ public class ModuleManager implements ModuleDefineHolder {
     /**
      * Init the given modules
      */
-    public void init(
-        ApplicationConfiguration applicationConfiguration) throws ModuleNotFoundException, ProviderNotFoundException, ServiceNotProvidedException, CycleDependencyException, ModuleConfigException, ModuleStartException {
+    public void init(ApplicationConfiguration applicationConfiguration) throws ModuleNotFoundException,
+            ProviderNotFoundException, ServiceNotProvidedException, CycleDependencyException,
+            ModuleConfigException, ModuleStartException {
         String[] moduleNames = applicationConfiguration.moduleList();
+        // SPI 加载 ModuleDefine
         ServiceLoader<ModuleDefine> moduleServiceLoader = ServiceLoader.load(ModuleDefine.class);
+        // SPI 加载 ModuleProvider
         ServiceLoader<ModuleProvider> moduleProviderLoader = ServiceLoader.load(ModuleProvider.class);
-
+        // moduleNames 去重
         HashSet<String> moduleSet = new HashSet<>(Arrays.asList(moduleNames));
         for (ModuleDefine module : moduleServiceLoader) {
             if (moduleSet.contains(module.name())) {
+                // 运行模块的 prepare 阶段
                 module.prepare(this, applicationConfiguration.getModuleConfiguration(module.name()), moduleProviderLoader);
+                // 将已经加载好的XxxModule放到loadeModules中
                 loadedModules.put(module.name(), module);
+                // 降低 堆内存使用？
                 moduleSet.remove(module.name());
             }
         }
-        // Finish prepare stage
+        // 完成准备阶段
         isInPrepareStage = false;
 
         if (moduleSet.size() > 0) {
             throw new ModuleNotFoundException(moduleSet.toString() + " missing.");
         }
-
+        // 遍历所有的ModuleDefine，根据与之对应的ModeleProvider依赖的ModuleDefine,对ModuleProvider进行排序，并排除了循环依赖的问题。
         BootstrapFlow bootstrapFlow = new BootstrapFlow(loadedModules);
-
+        // 启动
         bootstrapFlow.start(this);
+        // 通知
         bootstrapFlow.notifyAfterCompleted();
     }
 

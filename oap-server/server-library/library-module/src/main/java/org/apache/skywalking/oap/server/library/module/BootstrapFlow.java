@@ -35,7 +35,7 @@ class BootstrapFlow {
     BootstrapFlow(Map<String, ModuleDefine> loadedModules) throws CycleDependencyException, ModuleNotFoundException {
         this.loadedModules = loadedModules;
         startupSequence = new LinkedList<>();
-
+        // 遍历loadedModules中所有的ModuleDefine对应的ModuleProvider,然后根据每个ModuleProvider依赖的ModuleDefine进行排序
         makeSequence();
     }
 
@@ -45,7 +45,7 @@ class BootstrapFlow {
         for (ModuleProvider provider : startupSequence) {
             LOGGER.info("start the provider {} in {} module.", provider.name(), provider.getModuleName());
             provider.requiredCheck(provider.getModule().services());
-
+            // 初始化 操作句柄、监听器 等
             provider.start();
         }
     }
@@ -59,6 +59,7 @@ class BootstrapFlow {
     private void makeSequence() throws CycleDependencyException, ModuleNotFoundException {
         List<ModuleProvider> allProviders = new ArrayList<>();
         for (final ModuleDefine module : loadedModules.values()) {
+            // 取出所有以来的模块
             String[] requiredModules = module.provider().requiredModules();
             if (requiredModules != null) {
                 for (String requiredModule : requiredModules) {
@@ -73,7 +74,7 @@ class BootstrapFlow {
 
             allProviders.add(module.provider());
         }
-
+        // 根据依赖关系 进行排序
         do {
             int numOfToBeSequenced = allProviders.size();
             for (int i = 0; i < allProviders.size(); i++) {

@@ -41,9 +41,8 @@ public abstract class ModelInstaller implements ModelCreator.CreatingListener {
             while (!isExists(model)) {
                 try {
                     log.info(
-                        "table: {} does not exist. OAP is running in 'no-init' mode, waiting... retry 3s later.",
-                        model
-                            .getName()
+                            "table: {} does not exist. OAP is running in 'no-init' mode, waiting... retry 3s later.",
+                            model.getName()
                     );
                     Thread.sleep(3000L);
                 } catch (InterruptedException e) {
