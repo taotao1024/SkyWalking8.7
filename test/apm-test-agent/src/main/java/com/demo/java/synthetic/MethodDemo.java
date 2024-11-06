@@ -1,4 +1,4 @@
-package org.example.demo.synthetic;
+package com.demo.java.synthetic;
 
 public class MethodDemo {
 

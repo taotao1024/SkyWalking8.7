@@ -1,4 +1,4 @@
-package org.example.demo.friday;
+package com.demo.java.friday;
 
 /**
  * 运行时编译工具

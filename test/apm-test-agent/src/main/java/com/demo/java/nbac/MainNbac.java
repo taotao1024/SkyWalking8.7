@@ -1,4 +1,4 @@
-package org.example.demo.nbac;
+package com.demo.java.nbac;
 
 /**
  * JDK11 以后的版本 引入Nbac修复方法的二义性

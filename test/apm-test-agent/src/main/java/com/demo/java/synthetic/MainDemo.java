@@ -1,4 +1,4 @@
-package org.example.demo.synthetic;
+package com.demo.java.synthetic;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package org.example.demo.atomic;
+package com.demo.java.atomic;
 
 import jdk.nashorn.internal.ir.CallNode;
 import sun.misc.Unsafe;
