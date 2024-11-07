@@ -51,6 +51,7 @@ public class LogFilterListener implements LogAnalysisListener {
     @Override
     public LogAnalysisListener parse(final LogData.Builder logData,
                                      final Message extraLog) {
+        // dsl 上下文对象
         dsls.forEach(dsl -> dsl.bind(new Binding().log(logData.build())
                                                   .extraLog(extraLog)));
         return this;

@@ -32,6 +32,11 @@ public class LogAnalyzerServiceImpl implements ILogAnalyzerService, ILogAnalysis
     private final LogAnalyzerModuleConfig moduleConfig;
     private final List<LogAnalysisListenerFactory> factories = new ArrayList<>();
 
+    /**
+     * 日志分析入口
+     * @param log
+     * @param extraLog
+     */
     @Override
     public void doAnalysis(final LogData.Builder log, Message extraLog) {
         LogAnalyzer analyzer = new LogAnalyzer(moduleManager, moduleConfig, this);

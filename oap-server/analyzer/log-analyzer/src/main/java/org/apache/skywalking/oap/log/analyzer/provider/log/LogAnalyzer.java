@@ -46,12 +46,13 @@ public class LogAnalyzer {
             log.debug("The log is ignored because the Service name is empty");
             return;
         }
+        // 创建监听
         createListeners();
         if (builder.getTimestamp() == 0) {
             // If no timestamp, OAP server would use the received timestamp as log's timestamp
             builder.setTimestamp(System.currentTimeMillis());
         }
-
+        // 通知
         notifyListener(builder, extraLog);
         notifyListenerToBuild();
     }
