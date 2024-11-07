@@ -39,3 +39,4 @@ oap-server/*/target/*
 # SkyWalking-UI
 /skywalking-ui/node_modules/
 /package-lock.json
+/oap-server/oal-grammar/gen/

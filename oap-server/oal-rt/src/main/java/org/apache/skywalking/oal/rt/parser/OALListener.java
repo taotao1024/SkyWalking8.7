@@ -25,6 +25,9 @@ import org.apache.skywalking.oal.rt.grammar.OALParser;
 import org.apache.skywalking.oal.rt.grammar.OALParserBaseListener;
 import org.apache.skywalking.oap.server.core.source.DefaultScopeDefine;
 
+/**
+ * OAL监听器
+ */
 public class OALListener extends OALParserBaseListener {
     private List<AnalysisResult> results;
     private AnalysisResult current;

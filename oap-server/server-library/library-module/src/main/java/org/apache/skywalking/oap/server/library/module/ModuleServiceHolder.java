@@ -23,5 +23,13 @@ public interface ModuleServiceHolder {
     void registerServiceImplementation(Class<? extends Service> serviceType,
         Service service) throws ServiceNotProvidedException;
 
+    /**
+     * 获取到 CoreModuleProvide中的OALEngineLoaderService对象，并且 调用OLAEngineLoaderService的load方法。
+     *
+     * @param serviceType
+     * @param <T>
+     * @return
+     * @throws ServiceNotProvidedException
+     */
     <T extends Service> T getService(Class<T> serviceType) throws ServiceNotProvidedException;
 }

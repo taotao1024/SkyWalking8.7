@@ -26,6 +26,9 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Define multiple OAL configuration
+ * <p>
+ * 其子类对应如下
+ * {@link oal}
  */
 @Getter
 @ToString

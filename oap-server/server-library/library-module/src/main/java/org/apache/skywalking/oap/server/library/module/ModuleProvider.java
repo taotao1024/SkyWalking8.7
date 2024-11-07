@@ -23,6 +23,8 @@ import java.util.Map;
 import lombok.Setter;
 
 /**
+ * 管理所有的ModuleDefine
+ * <p>
  * The <code>ModuleProvider</code> is an implementation of a {@link ModuleDefine}.
  * <p>
  * And each moduleDefine can have one or more implementation, which depends on `application.yml`

@@ -48,13 +48,14 @@ public class ScriptParser {
 
     public static ScriptParser createFromScriptText(String script, String sourcePackage) throws IOException {
         ScriptParser parser = new ScriptParser();
+        // 待解析信息放入 OAL 词法分析器 对象中
         parser.lexer = new OALLexer(CharStreams.fromString(script));
         parser.sourcePackage = sourcePackage;
         return parser;
     }
 
     public OALScripts parse() throws IOException {
-        // 初始化OALScripts对象
+        // 初始化OALScripts对象 OAL 脚本
         OALScripts scripts = new OALScripts();
         // 把词法解析的结果进行token流的转换
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -62,6 +63,7 @@ public class ScriptParser {
         OALParser parser = new OALParser(tokens);
 
         ParseTree tree = parser.root();
+        // 解析树遍历器
         ParseTreeWalker walker = new ParseTreeWalker();
         // 注册OALListener的监听器 后续才会执行OALListener中每个enter、exit方法
         walker.walk(new OALListener(scripts, sourcePackage), tree);

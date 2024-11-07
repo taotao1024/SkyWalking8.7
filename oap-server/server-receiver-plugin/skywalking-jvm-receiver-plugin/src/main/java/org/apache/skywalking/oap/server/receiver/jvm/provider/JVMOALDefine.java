@@ -28,7 +28,7 @@ public class JVMOALDefine extends OALDefine {
 
     private JVMOALDefine() {
         super(
-            "oal/java-agent.oal",
+            "oal/java-agent.oal",// 设置关联的oal文件
             "org.apache.skywalking.oap.server.core.source"
         );
     }

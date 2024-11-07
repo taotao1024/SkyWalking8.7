@@ -1,0 +1,3 @@
+ - **ANTLR**（全名：ANother Tool for Language Recognition）是基于LL(*)算法实现的**语法解析器生成器（parser generator）**，用Java语言编写，使用自上而下（top-down）的递归下降LL剖析器方法。由旧金山大学的Terence Parr博士等人于1989年开始发展。
+ - 目前Hibernate与WebLogic都是使用ANTLR做为来解析HQL。在NetBeans IDE中更以ANTLR解析C++。Twitter搜索使用ANTLR解析，一天超过200亿次查询。
+ - 在 SkyWalking 中 使用 ANTLR 对 **.oal** 进行解析，生成指标

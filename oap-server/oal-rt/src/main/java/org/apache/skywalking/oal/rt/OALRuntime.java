@@ -74,6 +74,8 @@ import org.apache.skywalking.oap.server.library.util.ResourceUtils;
 /**
  * OAL Runtime is the class generation engine, which load the generated classes from OAL scrip definitions. This runtime
  * is loaded dynamically.
+ * <p>
+ * OAL 运行时是类生成引擎，它从 OAL 脚本定义加载生成的类。此运行时是动态加载的。
  */
 @Slf4j
 public class OALRuntime implements OALEngine {
@@ -115,12 +117,15 @@ public class OALRuntime implements OALEngine {
     public OALRuntime(OALDefine define) {
         oalDefine = define;
         classPool = ClassPool.getDefault();
+        // 初始化Configuration对象，后续被 freemarker 使用 --> *.ft 文件
         configuration = new Configuration(new Version("2.3.28"));
         configuration.setEncoding(Locale.ENGLISH, CLASS_FILE_CHARSET);
         configuration.setClassLoaderForTemplateLoading(OALRuntime.class.getClassLoader(), "/code-templates");
         allDispatcherContext = new AllDispatcherContext();
         metricsClasses = new ArrayList<>();
         dispatcherClasses = new ArrayList<>();
+        // 后续生成的 XxxMetrics、XxxMetricsBuilder、XxxDispatcher等类文件，默认都 直接写到ClassLoader中，
+        // 我们看不到这些类的内部代码，可以通过修改 'SW_OAL_ENGINE_DEBUG=true' 将这些类在系统中 生成一份，方便开发使用。
         openEngineDebug = StringUtil.isNotEmpty(System.getenv("SW_OAL_ENGINE_DEBUG"));
     }
 
@@ -142,6 +147,7 @@ public class OALRuntime implements OALEngine {
     @Override
     public void start(ClassLoader currentClassLoader) throws ModuleStartException, OALCompileException {
         if (!IS_RT_TEMP_FOLDER_INIT_COMPLETED) {
+            // 在 oal-rt/ 下输出内容
             prepareRTTempFolder();
             IS_RT_TEMP_FOLDER_INIT_COMPLETED = true;
         }
@@ -474,9 +480,14 @@ public class OALRuntime implements OALEngine {
         context.getMetrics().add(metricsStmt);
     }
 
+    /**
+     * {@link /docs/en/concepts-and-designs/oal.md}
+     */
     private void prepareRTTempFolder() {
         if (openEngineDebug) {
             File workPath = WorkPath.getPath();
+            // docs/en/concepts-and-designs/oal.md
+
             File folder = new File(workPath.getParentFile(), "oal-rt/");
             if (folder.exists()) {
                 try {

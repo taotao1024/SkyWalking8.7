@@ -46,11 +46,13 @@ public class OALEngineLoaderService implements Service {
      * Normally it is invoked in the {@link ModuleProvider#start()} of the receiver-plugin module.
      */
     public void load(OALDefine define) throws ModuleStartException {
+        // 判断该OAL 是否被激活 oalDefineSet中记录 激活的OAL
         if (oalDefineSet.contains(define)) {
             // each oal define will only be activated once
             return;
         }
         try {
+            // 获取 OALRuntime 实例
             OALEngine engine = loadOALEngine(define);
             StreamAnnotationListener streamAnnotationListener = new StreamAnnotationListener(moduleManager);
             engine.setStreamListener(streamAnnotationListener);
@@ -61,8 +63,9 @@ public class OALEngineLoaderService implements Service {
             engine.setStorageBuilderFactory(moduleManager.find(StorageModule.NAME)
                                                          .provider()
                                                          .getService(StorageBuilderFactory.class));
-
+            // 启动
             engine.start(OALEngineLoaderService.class.getClassLoader());
+            // 通知
             engine.notifyAllListeners();
 
             oalDefineSet.add(define);
