@@ -81,8 +81,13 @@ public class DispatcherManager implements DispatcherDetectorListener {
 
     @Override
     public void addIfAsSourceDispatcher(Class aClass) throws IllegalAccessException, InstantiationException {
-        if (!aClass.isInterface() && !Modifier.isAbstract(
-            aClass.getModifiers()) && SourceDispatcher.class.isAssignableFrom(aClass)) {
+
+        if (!aClass.isInterface() // 判断当前前的class 是否为为一个接口
+                && !Modifier.isAbstract(
+                aClass.getModifiers()) && // 获取到class的描述信息 比如 public private abstract
+                SourceDispatcher.class.isAssignableFrom(aClass) // 是否实现了 SourceSDispatcher 接口
+        ) {
+            // 获取当前类 实现类的接口以及泛型参数 全限定路径
             Type[] genericInterfaces = aClass.getGenericInterfaces();
             for (Type genericInterface : genericInterfaces) {
                 ParameterizedType anInterface = (ParameterizedType) genericInterface;
@@ -92,18 +97,20 @@ public class DispatcherManager implements DispatcherDetectorListener {
                     if (arguments.length != 1) {
                         throw new UnexpectedException("unexpected type argument number, class " + aClass.getName());
                     }
+                    // 泛型参数
                     Type argument = arguments[0];
-
+                    // 初始化这个泛型参数
                     Object source = ((Class) argument).newInstance();
-
+                    // 判断 泛型参数是否实现了 ISource 接口 如果没有则抛出异常
                     if (!ISource.class.isAssignableFrom(source.getClass())) {
                         throw new UnexpectedException(
                             "unexpected type argument of class " + aClass.getName() + ", should be `org.apache.skywalking.oap.server.core.source.Source`. ");
                     }
 
                     ISource dispatcherSource = (ISource) source;
+                    // 实例化当前的class
                     SourceDispatcher dispatcher = (SourceDispatcher) aClass.newInstance();
-
+                    // 调用泛型类实例化出来的对象scope() 得到DefaultScopeDefine中的定义
                     int scopeId = dispatcherSource.scope();
 
                     List<SourceDispatcher> dispatchers = this.dispatcherMap.get(scopeId);

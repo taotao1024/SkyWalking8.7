@@ -181,6 +181,7 @@ public class OALRuntime implements OALEngine {
                 throw new ModuleStartException(e.getMessage(), e);
             }
         }
+        // 遍历 使用 .oal 文件生成的所有XxxDispatcher类
         for (Class dispatcherClass : dispatcherClasses) {
             try {
                 dispatcherDetectorListener.addIfAsSourceDispatcher(dispatcherClass);
@@ -192,14 +193,19 @@ public class OALRuntime implements OALEngine {
 
     private void generateClassAtRuntime(OALScripts oalScripts) throws OALCompileException {
         List<AnalysisResult> metricsStmts = oalScripts.getMetricsStmts();
+        // 根据每个 AnalysisResult 的from属性的sourceName的值 对AnalysisResult对象进行一个分组
         metricsStmts.forEach(this::buildDispatcherContext);
 
         for (AnalysisResult metricsStmt : metricsStmts) {
+            // generateMetricsClass方法 就是开始使用AnalysisResult生成的XxxMetrics类 并加入List中
             metricsClasses.add(generateMetricsClass(metricsStmt));
+            // 使用 AnalysisResult 生成 XxxMetricsBuilder 类
             generateMetricsBuilderClass(metricsStmt);
         }
 
         for (Map.Entry<String, DispatcherContext> entry : allDispatcherContext.getAllContext().entrySet()) {
+            // generateDispatcherClass 方法是生成 Dispatcher 类
+            // dispatcherClasses 是存放所有已经生成好的 Dispatcher 类
             dispatcherClasses.add(generateDispatcherClass(entry.getKey(), entry.getValue()));
         }
 
@@ -210,8 +216,11 @@ public class OALRuntime implements OALEngine {
 
     /**
      * Generate metrics class, and inject it to classloader
+     * <p>
+     * 生成 metrics 类，并将其注入 classloader
      */
     private Class generateMetricsClass(AnalysisResult metricsStmt) throws OALCompileException {
+       // 获取到 要生成的类名 类名为 metricsStmt.getMetricsName() + "Metrics"
         String className = metricsClassName(metricsStmt, false);
         CtClass parentMetricsClass = null;
         try {
@@ -220,20 +229,21 @@ public class OALRuntime implements OALEngine {
             log.error("Can't find parent class for " + className + ".", e);
             throw new OALCompileException(e.getMessage(), e);
         }
+        // 开始创建 需要生成 metrics 类 parentMetricsClass 的作用是 指定需要生成的类的父类
         CtClass metricsClass = classPool.makeClass(metricsClassName(metricsStmt, true), parentMetricsClass);
         try {
+            // 指定要实现的类
             metricsClass.addInterface(classPool.get(WITH_METADATA_INTERFACE));
         } catch (NotFoundException e) {
             log.error("Can't find WithMetadata interface for " + className + ".", e);
             throw new OALCompileException(e.getMessage(), e);
         }
-
+        // 获取到需要生成的类 ClassFile 对象
         ClassFile metricsClassClassFile = metricsClass.getClassFile();
+        // 获取到常量池
         ConstPool constPool = metricsClassClassFile.getConstPool();
 
-        /**
-         * Create empty construct
-         */
+        // 创建空结构
         try {
             CtConstructor defaultConstructor = CtNewConstructor.make("public " + className + "() {}", metricsClass);
             metricsClass.addConstructor(defaultConstructor);
@@ -244,20 +254,21 @@ public class OALRuntime implements OALEngine {
 
         /**
          * Add fields with annotations.
+         * 添加带有注释的字段。
          *
          * private ${sourceField.typeName} ${sourceField.fieldName};
          */
         for (SourceColumn field : metricsStmt.getFieldsFromSource()) {
             try {
                 CtField newField = CtField.make(
-                    "private " + field.getType()
-                                      .getName() + " " + field.getFieldName() + ";", metricsClass);
+                        "private " + field.getType().getName() + " "
+                                + field.getFieldName() + ";", metricsClass);
 
                 metricsClass.addField(newField);
 
                 metricsClass.addMethod(CtNewMethod.getter(field.getFieldGetter(), newField));
                 metricsClass.addMethod(CtNewMethod.setter(field.getFieldSetter(), newField));
-
+                // 创建一个注解
                 AnnotationsAttribute annotationsAttribute = new AnnotationsAttribute(
                     constPool, AnnotationsAttribute.visibleTag);
                 /**
@@ -269,7 +280,7 @@ public class OALRuntime implements OALEngine {
                     columnAnnotation.addMemberValue("length", new IntegerMemberValue(constPool, field.getLength()));
                 }
                 annotationsAttribute.addAnnotation(columnAnnotation);
-
+                // 把 @Column 注解放到字段中
                 newField.getFieldInfo().addAttribute(annotationsAttribute);
             } catch (CannotCompileException e) {
                 log.error(
@@ -280,8 +291,10 @@ public class OALRuntime implements OALEngine {
 
         /**
          * Generate methods
+         * 生成方法
          */
         for (String method : METRICS_CLASS_METHODS) {
+            // StringWriter 对象存放着 .ftl 文件生成的字符串
             StringWriter methodEntity = new StringWriter();
             try {
                 configuration.getTemplate("metrics/" + method + ".ftl").process(metricsStmt, methodEntity);
@@ -307,8 +320,9 @@ public class OALRuntime implements OALEngine {
         streamAnnotation.addMemberValue("processor", new ClassMemberValue(METRICS_STREAM_PROCESSOR, constPool));
 
         annotationsAttribute.addAnnotation(streamAnnotation);
+        // 把生成好的 @Stream 注解 写到类上
         metricsClassClassFile.addAttribute(annotationsAttribute);
-
+        // 生成的类 将生成好的类 写入ClassLoader中 给后续使用
         Class targetClass;
         try {
             targetClass = metricsClass.toClass(currentClassLoader, null);
@@ -318,13 +332,16 @@ public class OALRuntime implements OALEngine {
         }
 
         log.debug("Generate metrics class, " + metricsClass.getName());
+        // 处理生成好的类
         writeGeneratedFile(metricsClass, metricsClass.getSimpleName(), "metrics");
-
+        // 返回生成好的类
         return targetClass;
     }
 
     /**
      * Generate metrics class builder and inject it to classloader
+     * <p>
+     * 生成 metrics 类构建器并将其注入 classloader
      */
     private void generateMetricsBuilderClass(AnalysisResult metricsStmt) throws OALCompileException {
         String className = metricsBuilderClassName(metricsStmt, false);
@@ -340,6 +357,7 @@ public class OALRuntime implements OALEngine {
          * Create empty construct
          */
         try {
+            // 空构造方法
             CtConstructor defaultConstructor = CtNewConstructor.make(
                 "public " + className + "() {}", metricsBuilderClass);
             metricsBuilderClass.addConstructor(defaultConstructor);
@@ -466,16 +484,22 @@ public class OALRuntime implements OALEngine {
     }
 
     private void buildDispatcherContext(AnalysisResult metricsStmt) {
+        // 获取到AnalysisResult的form属性的sourceName的值 可以当字符串来看
         String sourceName = metricsStmt.getSourceName();
-
+        // allDispatcherContext.getAllContext() 获取当前OALRuntime初始化的时候 创建的AllDispatcherContext对象
+        // 因为 每个.oal 文件都会创建一个OALRuntime对象，所以每个 .oal 文件都会有一个新的AllDispatcherContext
         DispatcherContext context = allDispatcherContext.getAllContext().computeIfAbsent(sourceName, name -> {
+            // 初始化
             DispatcherContext absent = new DispatcherContext();
             absent.setSourcePackage(oalDefine.getSourcePackage());
             absent.setSource(name);
             absent.setPackageName(name.toLowerCase());
             return absent;
         });
+        // oalDefine.getDynamicMetricsClassPackage()获取到一段固定的值
+        // “org.apache.skywalking.oap.server.core.source.oal.rt.metrics"
         metricsStmt.setMetricsClassPackage(oalDefine.getDynamicMetricsClassPackage());
+        // 获取到 XxxOALDefine 中定义的 sourcePackage 的字符串
         metricsStmt.setSourcePackage(oalDefine.getSourcePackage());
         context.getMetrics().add(metricsStmt);
     }

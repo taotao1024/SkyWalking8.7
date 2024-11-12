@@ -54,16 +54,20 @@ public class OALEngineLoaderService implements Service {
         try {
             // 获取 OALRuntime 实例
             OALEngine engine = loadOALEngine(define);
+            // 初始化 StreamAnnotationListener 对象
             StreamAnnotationListener streamAnnotationListener = new StreamAnnotationListener(moduleManager);
+            // 把初始化的 StreamAnnotationListener 对象 设置到OALEngine属性中
             engine.setStreamListener(streamAnnotationListener);
+            // 在CoreModuleProvider 中找到SourceReceiverImpl对象，然后调用getDispatcherDetectorListener()方法 获取到最终的 DispatcherDetector 对象
             engine.setDispatcherListener(moduleManager.find(CoreModule.NAME)
                                                       .provider()
                                                       .getService(SourceReceiver.class)
                                                       .getDispatcherDetectorListener());
+            // 获取MysqlStorageProvider中初始化好的storageBuilderFactory对象 其实是 StorageBuilderFactory.Definition 对象
             engine.setStorageBuilderFactory(moduleManager.find(StorageModule.NAME)
                                                          .provider()
                                                          .getService(StorageBuilderFactory.class));
-            // 启动
+            // 获取到 自己的ClassLoader 并调用OALRuntime的start()方法 启动
             engine.start(OALEngineLoaderService.class.getClassLoader());
             // 通知
             engine.notifyAllListeners();
