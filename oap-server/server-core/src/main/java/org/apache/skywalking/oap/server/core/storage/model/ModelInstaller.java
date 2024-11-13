@@ -28,6 +28,8 @@ import org.apache.skywalking.oap.server.library.module.ModuleManager;
 
 /**
  * The core module installation controller.
+ * <p>
+ * 核心模块安装控制器。
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -52,6 +54,7 @@ public abstract class ModelInstaller implements ModelCreator.CreatingListener {
         } else {
             if (!isExists(model)) {
                 log.info("table: {} does not exist", model.getName());
+                // 创建数据库表
                 createTable(model);
             }
         }
@@ -63,8 +66,8 @@ public abstract class ModelInstaller implements ModelCreator.CreatingListener {
      */
     protected final void overrideColumnName(String columnName, String newName) {
         ModelManipulator modelOverride = moduleManager.find(CoreModule.NAME)
-                                                      .provider()
-                                                      .getService(ModelManipulator.class);
+                .provider()
+                .getService(ModelManipulator.class);
         modelOverride.overrideColumnName(columnName, newName);
     }
 

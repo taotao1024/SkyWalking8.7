@@ -53,24 +53,34 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
     @Override
     public Model add(Class<?> aClass, int scopeId, Storage storage, boolean record) throws StorageException {
         // Check this scope id is valid.
+        // 判断是否合法
         DefaultScopeDefine.nameOf(scopeId);
-
+        // 用于存放一些常见表的字段信息
         List<ModelColumn> modelColumns = new ArrayList<>();
         List<ExtraQueryIndex> extraQueryIndices = new ArrayList<>();
+        // 反射获取字段 并遍历所有字段 收集信息
+        // 1、收集到了Metrics类中 所有带@Column注解的字段
+        // 2、表索引信息
+        // 3、需要创建的关联表的信息
         retrieval(aClass, storage.getModelName(), modelColumns, extraQueryIndices, scopeId);
-
+        // 初始化model 一个model对应一张表
         Model model = new Model(
-            storage.getModelName(), modelColumns, extraQueryIndices, scopeId,
-            storage.getDownsampling(), record,
-            isSuperDatasetModel(aClass),
-            FunctionCategory.uniqueFunctionName(aClass),
-            storage.isTimeRelativeID()
+                storage.getModelName(), // 表名
+                modelColumns,
+                extraQueryIndices,
+                scopeId,
+                storage.getDownsampling(),
+                record,
+                isSuperDatasetModel(aClass),
+                FunctionCategory.uniqueFunctionName(aClass),
+                storage.isTimeRelativeID()
         );
 
         this.followColumnNameRules(model);
         models.add(model);
 
         for (final CreatingListener listener : listeners) {
+            // 创建表结构
             listener.whenCreating(model);
         }
         return model;
@@ -94,6 +104,8 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
 
     /**
      * Read model column metadata based on the class level definition.
+     * <p>
+     * 根据类级别定义读取模型列元数据。
      */
     private void retrieval(final Class<?> clazz,
                            final String modelName,
@@ -103,14 +115,16 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
         if (log.isDebugEnabled()) {
             log.debug("Analysis {} to generate Model.", clazz.getName());
         }
-
+        // 反射获取所有字段信息
         Field[] fields = clazz.getDeclaredFields();
 
         for (Field field : fields) {
             if (field.isAnnotationPresent(Column.class)) {
+                // 获取到字段的注解
                 Column column = field.getAnnotation(Column.class);
                 // Use the column#length as the default column length, as read the system env as the override mechanism.
                 // Log the error but don't block the startup sequence.
+                // 字段长度
                 int columnLength = column.length();
                 final String lengthEnvVariable = column.lengthEnvVariable();
                 if (StringUtil.isNotEmpty(lengthEnvVariable)) {
@@ -126,11 +140,12 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
                     }
                 }
                 modelColumns.add(
-                    new ModelColumn(
-                        new ColumnName(modelName, column.columnName()), field.getType(), field.getGenericType(),
-                        column.matchQuery(), column.storageOnly(), column.dataType().isValue(), columnLength,
-                        column.analyzer()
-                    ));
+                        // modelColumn 字段对象
+                        new ModelColumn(
+                                new ColumnName(modelName, column.columnName()), field.getType(), field.getGenericType(),
+                                column.matchQuery(), column.storageOnly(), column.dataType().isValue(), columnLength,
+                                column.analyzer()
+                        ));
                 if (log.isDebugEnabled()) {
                     log.debug("The field named {} with the {} type", column.columnName(), field.getType());
                 }
@@ -140,7 +155,7 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
                         column.defaultValue(), scopeId
                     );
                 }
-
+                // 索引定义
                 List<QueryUnifiedIndex> indexDefinitions = new ArrayList<>();
                 if (field.isAnnotationPresent(QueryUnifiedIndex.class)) {
                     indexDefinitions.add(field.getAnnotation(QueryUnifiedIndex.class));
@@ -149,7 +164,7 @@ public class StorageModels implements IModelManager, ModelCreator, ModelManipula
                 if (field.isAnnotationPresent(MultipleQueryUnifiedIndex.class)) {
                     Collections.addAll(indexDefinitions, field.getAnnotation(MultipleQueryUnifiedIndex.class).value());
                 }
-
+                // 组合索引
                 indexDefinitions.forEach(indexDefinition -> extraQueryIndices.add(new ExtraQueryIndex(
                     column.columnName(),
                     indexDefinition.withColumns()

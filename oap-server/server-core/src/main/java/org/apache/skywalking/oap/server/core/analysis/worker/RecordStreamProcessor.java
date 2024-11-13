@@ -59,19 +59,23 @@ public class RecordStreamProcessor implements StreamProcessor<Record> {
     @Override
     @SuppressWarnings("unchecked")
     public void create(ModuleDefineHolder moduleDefineHolder, Stream stream, Class<? extends Record> recordClass) throws StorageException {
+        // 这里就是获取到MysqlStorageProvider中初始化好的StorageBuilderFactory的实现类Default
         final StorageBuilderFactory storageBuilderFactory = moduleDefineHolder.find(StorageModule.NAME)
                                                                               .provider()
                                                                               .getService(StorageBuilderFactory.class);
-        final Class<? extends StorageBuilder> builder = storageBuilderFactory.builderOf(recordClass, stream.builder());
 
+        // Metrics类的@Strean注解中 builder属性指向的类 即生成的MetricsBuilder类
+        final Class<? extends StorageBuilder> builder = storageBuilderFactory.builderOf(recordClass, stream.builder());
+        // 获取到MySqlStorageProvider中初始化好的JDBCStorageDao对象
         StorageDAO storageDAO = moduleDefineHolder.find(StorageModule.NAME).provider().getService(StorageDAO.class);
         IRecordDAO recordDAO;
         try {
+            // 初始化MetricsBuilder类作为参数 传入初始化JDBCMetricsDao对象中，在后续的L2聚合中，数据库时使用
             recordDAO = storageDAO.newRecordDao(builder.getDeclaredConstructor().newInstance());
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new UnexpectedException("Create " + stream.builder().getSimpleName() + " record DAO failure.", e);
         }
-
+        // 用于后续创建数据表 一个Metrics表创建一张表
         ModelCreator modelSetter = moduleDefineHolder.find(CoreModule.NAME).provider().getService(ModelCreator.class);
         // Record stream doesn't read data from database during the persistent process. Keep the timeRelativeID == false always.
         Model model = modelSetter.add(

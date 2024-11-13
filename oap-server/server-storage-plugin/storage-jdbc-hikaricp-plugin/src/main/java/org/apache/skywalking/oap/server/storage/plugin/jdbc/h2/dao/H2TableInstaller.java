@@ -69,8 +69,10 @@ public class H2TableInstaller extends ModelInstaller {
         JDBCHikariCPClient jdbcHikariCPClient = (JDBCHikariCPClient) client;
         try (Connection connection = jdbcHikariCPClient.getConnection()) {
             SQLBuilder tableCreateSQL = new SQLBuilder("CREATE TABLE IF NOT EXISTS " + model.getName() + " (");
-            /**
+            /*
              * 512 is also the ElasticSearch ID size.
+             * <p>
+             * 512 也是 ElasticSearch ID 大小。
              */
             tableCreateSQL.appendLine("id VARCHAR(512) PRIMARY KEY, ");
             for (int i = 0; i < model.getColumns().size(); i++) {
@@ -83,9 +85,9 @@ public class H2TableInstaller extends ModelInstaller {
             if (log.isDebugEnabled()) {
                 log.debug("creating table: " + tableCreateSQL.toStringInNewLine());
             }
-
+            // 创建数据表
             jdbcHikariCPClient.execute(connection, tableCreateSQL.toString());
-
+            // 创建索引
             createTableIndexes(jdbcHikariCPClient, connection, model);
         } catch (JDBCClientException | SQLException e) {
             throw new StorageException(e.getMessage(), e);

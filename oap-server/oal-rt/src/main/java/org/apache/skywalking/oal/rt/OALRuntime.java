@@ -176,6 +176,7 @@ public class OALRuntime implements OALEngine {
     public void notifyAllListeners() throws ModuleStartException {
         for (Class metricsClass : metricsClasses) {
             try {
+                // 通知
                 streamAnnotationListener.notify(metricsClass);
             } catch (StorageException e) {
                 throw new ModuleStartException(e.getMessage(), e);
