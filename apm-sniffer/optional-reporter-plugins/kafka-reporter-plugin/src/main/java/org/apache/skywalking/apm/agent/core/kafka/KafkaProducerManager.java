@@ -51,6 +51,7 @@ import org.apache.skywalking.apm.util.StringUtil;
 
 /**
  * Configuring, initializing and holding a KafkaProducer instance for reporters.
+ * 为生产者配置、初始化和持有 KafkaProducer 实例。
  */
 @DefaultImplementor
 public class KafkaProducerManager implements BootService, Runnable {
