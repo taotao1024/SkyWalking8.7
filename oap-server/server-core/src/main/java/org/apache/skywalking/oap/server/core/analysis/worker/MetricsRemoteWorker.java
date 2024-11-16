@@ -28,6 +28,8 @@ import org.apache.skywalking.oap.server.library.module.ModuleDefineHolder;
 
 /**
  * MetricsRemoteWorker forwards the metrics to the target OAP node.
+ * <p>
+ * MetricsRemoteWorker 将指标转发到目标 OAP 节点。
  */
 @Slf4j
 public class MetricsRemoteWorker extends AbstractWorker<Metrics> {
@@ -43,6 +45,7 @@ public class MetricsRemoteWorker extends AbstractWorker<Metrics> {
     @Override
     public final void in(Metrics metrics) {
         try {
+            // 根据给定的选择器将数据发送到目标
             remoteSender.send(remoteReceiverWorkerName, metrics, Selector.HashCode);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);

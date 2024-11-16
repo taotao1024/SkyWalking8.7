@@ -112,8 +112,9 @@ public class MetricsPersistentWorker extends PersistenceWorker<Metrics> {
         } catch (Exception e) {
             throw new UnexpectedException(e.getMessage(), e);
         }
-
+        // 创建 DataCarrier 设置Channel=1 设置一个Channel中存放2000个数据
         this.dataCarrier = new DataCarrier<>("MetricsPersistentWorker." + model.getName(), name, 1, 2000);
+        // 设置消费工厂 通过这里 启用线程池
         this.dataCarrier.consume(ConsumerPoolFactory.INSTANCE.get(name), new PersistentConsumer());
 
         MetricsCreator metricsCreator = moduleDefineHolder.find(TelemetryModule.NAME)
@@ -129,6 +130,15 @@ public class MetricsPersistentWorker extends PersistenceWorker<Metrics> {
 
     /**
      * Create the leaf and down-sampling MetricsPersistentWorker, no next step.
+     * 创建叶子并下采样 MetricsPersistentWorker，没有下一步
+     *
+     * @param moduleDefineHolder    moduleManager
+     * @param model                 model数据表对象
+     * @param metricsDAO            数据库连接句柄
+     * @param enableDatabaseSession
+     * @param supportUpdate
+     * @param storageSessionTimeout
+     * @param metricsDataTTL
      */
     MetricsPersistentWorker(ModuleDefineHolder moduleDefineHolder,
                             Model model,
@@ -325,6 +335,11 @@ public class MetricsPersistentWorker extends PersistenceWorker<Metrics> {
 
         }
 
+        /**
+         * 数据消费
+         *
+         * @param data 待消费的数据
+         */
         @Override
         public void consume(List<Metrics> data) {
             MetricsPersistentWorker.this.onWork(data);

@@ -27,6 +27,9 @@ import org.apache.skywalking.oap.server.library.module.ModuleDefineHolder;
  * MetricsTransWorker is transferring the metrics for down sampling. All streaming process metrics are in the minute
  * precision, but at the storage layer, in order to enhance the query performance, metrics could be saved in minute,
  * hour, day and month, including some of them through CoreModuleConfig#downsampling.
+ * <p>
+ * MetricsTransWorker 正在传输用于下采样的指标。所有流式处理指标都是以分钟精度为单位的，但在存储层，
+ * 为了提升查询性能，指标可以以分钟、小时、天和月为单位保存，包括部分通过 CoreModuleConfigdownssampling 保存的指标。
  */
 public class MetricsTransWorker extends AbstractWorker<Metrics> {
     private final MetricsPersistentWorker hourPersistenceWorker;

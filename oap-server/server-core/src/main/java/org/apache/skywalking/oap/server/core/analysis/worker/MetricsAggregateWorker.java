@@ -39,6 +39,9 @@ import org.apache.skywalking.oap.server.telemetry.api.MetricsTag;
  * it merges the data just after the receiver analysis. The metrics belonging to the same entity, metrics type and time
  * bucket, the L1 aggregation will merge them into one metrics object to reduce the unnecessary memory and network
  * payload.
+ * <p>
+ * MetricsAggregateWorker 提供内存中的指标合并功能。这种聚合称为 L1 聚合，它在接收者分析之后合并数据。属于同一实体、指标类型和时间存储桶的指标，
+ * L1 聚合会将它们合并到一个指标对象中，以减少不必要的内存和网络负载。
  */
 @Slf4j
 public class MetricsAggregateWorker extends AbstractWorker<Metrics> {
@@ -88,12 +91,15 @@ public class MetricsAggregateWorker extends AbstractWorker<Metrics> {
     /**
      * Dequeue consuming. According to {@link IConsumer#consume(List)}, this is a serial operation for every work
      * instance.
+     * 数据消费
      *
      * @param metricsList from the queue.
      */
     private void onWork(List<Metrics> metricsList) {
         metricsList.forEach(metrics -> {
             aggregationCounter.inc();
+            // mergeDataCache 用于存储当前L1级聚合已经处理过的Metric数据，
+            // 因为在声明L1级聚合的时候，会设置L1级聚合 冲刷buffer的时间为500ms.
             mergeDataCache.accept(metrics);
         });
 
@@ -115,6 +121,9 @@ public class MetricsAggregateWorker extends AbstractWorker<Metrics> {
         }
     }
 
+    /**
+     * 数据消费者
+     */
     private class AggregatorConsumer implements IConsumer<Metrics> {
         @Override
         public void init() {

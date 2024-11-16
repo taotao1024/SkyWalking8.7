@@ -47,8 +47,11 @@ public abstract class PersistenceWorker<INPUT extends StorageData> extends Abstr
 
     /**
      * Accept the input, and push the data into the cache.
+     * <p>
+     * 接受输入，并将数据推送到缓存中。
      */
     void onWork(List<INPUT> input) {
+        // 把数据写入到 ReadWriteSafeCache 中
         cache.write(input);
     }
 

@@ -138,6 +138,8 @@ public class GRPCRemoteClient implements RemoteClient {
 
     /**
      * Push stream data which need to send to another OAP server.
+     * <p>
+     * 需要发送到另一个 OAP 服务器的推流数据。
      *
      * @param nextWorkerName the name of a worker which will process this stream data.
      * @param streamData     the entity contains the values.

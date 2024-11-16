@@ -100,9 +100,11 @@ public enum PersistenceTimer {
 
         try (HistogramMetrics.Timer allTimer = allLatency.createTimer()) {
             List<PersistenceWorker<? extends StorageData>> persistenceWorkers = new ArrayList<>();
+            //
             persistenceWorkers.addAll(TopNStreamProcessor.getInstance().getPersistentWorkers());
+            // 这里MetricsStreamProcessor.getPersistentWorkers()中获取所有的L2级聚合的worker，包括 每天、没小时、每分钟
             persistenceWorkers.addAll(MetricsStreamProcessor.getInstance().getPersistentWorkers());
-
+            // 多线程执行
             CountDownLatch countDownLatch = new CountDownLatch(persistenceWorkers.size());
             persistenceWorkers.forEach(worker -> {
                 prepareExecutorService.submit(() -> {
@@ -113,7 +115,7 @@ public enum PersistenceTimer {
                             if (log.isDebugEnabled()) {
                                 log.debug("extract {} worker data and save", worker.getClass().getName());
                             }
-
+                            // 构建批量请求
                             innerPrepareRequests = worker.buildBatchRequests();
 
                             worker.endOfRound();

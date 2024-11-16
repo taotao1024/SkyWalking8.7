@@ -151,6 +151,6 @@ public abstract class Metrics extends StreamData implements StorageData {
         }
         return id;
     }
-
+    // 子类实现的Metrics#id0的方式 各自不同
     protected abstract String id0();
 }

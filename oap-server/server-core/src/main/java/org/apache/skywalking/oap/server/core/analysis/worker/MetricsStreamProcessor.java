@@ -132,11 +132,12 @@ public class MetricsStreamProcessor implements StreamProcessor<Metrics> {
         StorageDAO storageDAO = moduleDefineHolder.find(StorageModule.NAME).provider().getService(StorageDAO.class);
         IMetricsDAO metricsDAO;
         try {
+            // 初始化MetricsBuilder类 最为参数 传入初始化的JDBCMetricsDao对象 在后续的L2级聚合数据落库时使用
             metricsDAO = storageDAO.newMetricsDao(builder.getDeclaredConstructor().newInstance());
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new UnexpectedException("Create " + stream.getBuilder().getSimpleName() + " metrics DAO failure.", e);
         }
-
+        // 该对象用于后续创建数据表
         ModelCreator modelSetter = moduleDefineHolder.find(CoreModule.NAME).provider().getService(ModelCreator.class);
         DownSamplingConfigService configService = moduleDefineHolder.find(CoreModule.NAME)
                                                                     .provider()
@@ -160,13 +161,20 @@ public class MetricsStreamProcessor implements StreamProcessor<Metrics> {
             timeRelativeID = metricsExtension.timeRelativeID();
         }
         if (supportDownSampling) {
+            // 小时
             if (configService.shouldToHour()) {
+                // 创建Metrics信息 并创建数据表
                 Model model = modelSetter.add(
                     metricsClass, stream.getScopeId(), new Storage(stream.getName(), timeRelativeID, DownSampling.Hour),
                     false
                 );
+                // 根据基于小时聚合数据的Worker 该聚合为L2级聚合
+                // moduleDefineHolder 是 moduleNagage
+                // metricsDAO 是 JDBCMetricsDao 里面有数据库连接句柄、MetricsBuilder 对象
+                // model 需要操作的数据表信息
                 hourPersistentWorker = downSamplingWorker(moduleDefineHolder, metricsDAO, model, supportUpdate);
             }
+            // 天
             if (configService.shouldToDay()) {
                 Model model = modelSetter.add(
                     metricsClass, stream.getScopeId(), new Storage(stream.getName(), timeRelativeID, DownSampling.Day),
@@ -178,11 +186,12 @@ public class MetricsStreamProcessor implements StreamProcessor<Metrics> {
             transWorker = new MetricsTransWorker(
                 moduleDefineHolder, hourPersistentWorker, dayPersistentWorker);
         }
-
+        // 分钟
         Model model = modelSetter.add(
             metricsClass, stream.getScopeId(), new Storage(stream.getName(), timeRelativeID, DownSampling.Minute),
             false
         );
+        // L2聚合 组合 ？ 调试后在添加注释
         MetricsPersistentWorker minutePersistentWorker = minutePersistentWorker(
             moduleDefineHolder, metricsDAO, model, transWorker, supportUpdate);
 
@@ -190,12 +199,14 @@ public class MetricsStreamProcessor implements StreamProcessor<Metrics> {
         IWorkerInstanceSetter workerInstanceSetter = moduleDefineHolder.find(CoreModule.NAME)
                                                                        .provider()
                                                                        .getService(IWorkerInstanceSetter.class);
+        // 设置
         workerInstanceSetter.put(remoteReceiverWorkerName, minutePersistentWorker, metricsClass);
-
+        // remoteWorker 是将L1级聚合好的数据 发送到L2级聚合的一个工具
         MetricsRemoteWorker remoteWorker = new MetricsRemoteWorker(moduleDefineHolder, remoteReceiverWorkerName);
+        // 创建L1级聚合 L1级聚合初始化MetricsAggregateWorker
         MetricsAggregateWorker aggregateWorker = new MetricsAggregateWorker(
             moduleDefineHolder, remoteWorker, stream.getName(), l1FlushPeriod);
-
+        // L1级对象  防区 EntryWorker
         entryWorkers.put(metricsClass, aggregateWorker);
     }
 
@@ -220,10 +231,12 @@ public class MetricsStreamProcessor implements StreamProcessor<Metrics> {
                                                        IMetricsDAO metricsDAO,
                                                        Model model,
                                                        boolean supportUpdate) {
+        // 初始化MetricsPersistentWorker 对象
         MetricsPersistentWorker persistentWorker = new MetricsPersistentWorker(
             moduleDefineHolder, model, metricsDAO,
             enableDatabaseSession, supportUpdate, storageSessionTimeout, metricsDataTTL
         );
+        // 把创建好的L2级聚合对象放到persistentWorkers中
         persistentWorkers.add(persistentWorker);
 
         return persistentWorker;
