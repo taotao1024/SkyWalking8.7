@@ -22,6 +22,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.skywalking.oap.server.library.module.ModuleConfig;
 
+/**
+ * 配置文件中的 receiver-sharing-server
+ */
 @Getter
 @Setter
 public class SharingServerConfig extends ModuleConfig {

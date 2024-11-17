@@ -59,9 +59,14 @@ public class TraceModuleProvider extends ModuleProvider {
 
     @Override
     public void start() {
+        /**
+         * 从 GRPC获取积压的消息
+         * {@link org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModuleProvider}
+         */
         GRPCHandlerRegister grpcHandlerRegister = getManager().find(SharingServerModule.NAME)
                                                               .provider()
                                                               .getService(GRPCHandlerRegister.class);
+        // 从 HTTP获取积压消息
         JettyHandlerRegister jettyHandlerRegister = getManager().find(SharingServerModule.NAME)
                                                                 .provider()
                                                                 .getService(JettyHandlerRegister.class);

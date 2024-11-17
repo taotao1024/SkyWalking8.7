@@ -44,6 +44,9 @@ public class GRPCServer implements Server {
     private final String host;
     private final int port;
     private int maxConcurrentCallsPerConnection;
+    /**
+     * 消息体的最大长度
+     */
     private int maxMessageSize;
     private io.grpc.Server server;
     private NettyServerBuilder nettyServerBuilder;
@@ -100,6 +103,7 @@ public class GRPCServer implements Server {
 
     @Override
     public void initialize() {
+        // 基于Netty的集成
         InetSocketAddress address = new InetSocketAddress(host, port);
         ArrayBlockingQueue blockingQueue = new ArrayBlockingQueue(threadPoolQueueSize);
         ExecutorService executor = new ThreadPoolExecutor(

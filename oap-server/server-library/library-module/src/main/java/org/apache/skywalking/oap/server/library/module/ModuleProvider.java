@@ -78,6 +78,7 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
     public abstract void notifyAfterCompleted() throws ServiceNotProvidedException, ModuleStartException;
 
     /**
+     * 所需模块
      * @return moduleDefine names which does this moduleDefine require?
      */
     public abstract String[] requiredModules();

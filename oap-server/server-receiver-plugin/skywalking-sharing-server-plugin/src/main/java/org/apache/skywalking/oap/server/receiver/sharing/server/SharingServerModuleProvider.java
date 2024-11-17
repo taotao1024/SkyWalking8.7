@@ -89,6 +89,7 @@ public class SharingServerModuleProvider extends ModuleProvider {
 
             this.registerServiceImplementation(JettyHandlerRegister.class, new JettyHandlerRegisterImpl(jettyServer));
         } else {
+            // 默认 restPort == 0
             this.receiverJettyHandlerRegister = new ReceiverJettyHandlerRegister();
             this.registerServiceImplementation(JettyHandlerRegister.class, receiverJettyHandlerRegister);
         }
@@ -98,6 +99,7 @@ public class SharingServerModuleProvider extends ModuleProvider {
         }
 
         if (config.getGRPCPort() != 0) {
+            // 初始化 GRPCServer
             if (config.isGRPCSslEnabled()) {
                 grpcServer = new GRPCServer(
                     Strings.isBlank(config.getGRPCHost()) ? "0.0.0.0" : config.getGRPCHost(),
@@ -111,30 +113,37 @@ public class SharingServerModuleProvider extends ModuleProvider {
                     config.getGRPCPort()
                 );
             }
+            // 最大消息长度
             if (config.getMaxMessageSize() > 0) {
                 grpcServer.setMaxMessageSize(config.getMaxMessageSize());
             }
+            // 最大连接数
             if (config.getMaxConcurrentCallsPerConnection() > 0) {
                 grpcServer.setMaxConcurrentCallsPerConnection(config.getMaxConcurrentCallsPerConnection());
             }
+            // 线程池
             if (config.getGRPCThreadPoolQueueSize() > 0) {
                 grpcServer.setThreadPoolQueueSize(config.getGRPCThreadPoolQueueSize());
             }
+            // 线程池
             if (config.getGRPCThreadPoolSize() > 0) {
                 grpcServer.setThreadPoolSize(config.getGRPCThreadPoolSize());
             }
+            // 初始化
             grpcServer.initialize();
-
+            // 放入service 属性中
             GRPCHandlerRegisterImpl grpcHandlerRegister = new GRPCHandlerRegisterImpl(grpcServer);
             if (Objects.nonNull(authenticationInterceptor)) {
                 grpcHandlerRegister.addFilter(authenticationInterceptor);
             }
             this.registerServiceImplementation(GRPCHandlerRegister.class, grpcHandlerRegister);
         } else {
+            // 初始化 内部属性暂时没有赋值
             this.receiverGRPCHandlerRegister = new ReceiverGRPCHandlerRegister();
             if (Objects.nonNull(authenticationInterceptor)) {
                 receiverGRPCHandlerRegister.addFilter(authenticationInterceptor);
             }
+            // 默认走这里 因为 GRPCPort == 0
             this.registerServiceImplementation(GRPCHandlerRegister.class, receiverGRPCHandlerRegister);
         }
     }
@@ -144,12 +153,13 @@ public class SharingServerModuleProvider extends ModuleProvider {
         if (Objects.nonNull(grpcServer)) {
             grpcServer.addHandler(new HealthCheckServiceHandler());
         }
-
+        // GRPC
         if (Objects.nonNull(receiverGRPCHandlerRegister)) {
             receiverGRPCHandlerRegister.setGrpcHandlerRegister(getManager().find(CoreModule.NAME)
                                                                            .provider()
                                                                            .getService(GRPCHandlerRegister.class));
         }
+        // Jetty
         if (Objects.nonNull(receiverJettyHandlerRegister)) {
             receiverJettyHandlerRegister.setJettyHandlerRegister(getManager().find(CoreModule.NAME)
                                                                              .provider()

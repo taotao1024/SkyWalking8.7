@@ -317,6 +317,7 @@ receiver-register:
   selector: ${SW_RECEIVER_REGISTER:default}
   default:
 
+# 接收器跟踪
 receiver-trace:
   selector: ${SW_RECEIVER_TRACE:default}
   default:
