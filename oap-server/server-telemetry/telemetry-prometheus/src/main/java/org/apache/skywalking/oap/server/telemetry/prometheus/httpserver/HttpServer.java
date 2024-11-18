@@ -42,6 +42,10 @@ public final class HttpServer {
 
     private final PrometheusConfig config;
 
+    /**
+     * 基于Netty的HTTP服务
+     * @throws InterruptedException
+     */
     public void start() throws InterruptedException {
         // Configure SSL.
         final HttpDynamicSslContext sslCtx;

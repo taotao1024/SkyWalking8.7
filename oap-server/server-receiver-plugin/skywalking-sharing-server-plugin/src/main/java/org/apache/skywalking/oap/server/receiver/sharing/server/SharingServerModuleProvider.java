@@ -37,6 +37,9 @@ import org.apache.skywalking.oap.server.library.server.grpc.GRPCServer;
 import org.apache.skywalking.oap.server.library.server.jetty.JettyServer;
 import org.apache.skywalking.oap.server.library.server.jetty.JettyServerConfig;
 
+/**
+ * 共享服务器模块提供程序
+ */
 public class SharingServerModuleProvider extends ModuleProvider {
 
     private final SharingServerConfig config;

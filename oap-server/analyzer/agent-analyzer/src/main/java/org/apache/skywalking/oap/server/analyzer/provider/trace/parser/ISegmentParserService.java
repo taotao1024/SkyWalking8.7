@@ -23,6 +23,8 @@ import org.apache.skywalking.oap.server.library.module.Service;
 
 /**
  * Service of trace segment parser.
+ * <p>
+ * 跟踪段解析器的服务。
  */
 public interface ISegmentParserService extends Service {
     void send(SegmentObject segment);

@@ -8,6 +8,19 @@
         <version>8.7.0</version>
     </parent>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.linecorp.armeria/armeria -->
+        <dependency>
+            <groupId>com.linecorp.armeria</groupId>
+            <artifactId>armeria</artifactId>
+            <version>1.31.0</version>
+        </dependency>
+    </dependencies>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>apm-test-agent</artifactId>
     <version>1.0-SNAPSHOT</version>

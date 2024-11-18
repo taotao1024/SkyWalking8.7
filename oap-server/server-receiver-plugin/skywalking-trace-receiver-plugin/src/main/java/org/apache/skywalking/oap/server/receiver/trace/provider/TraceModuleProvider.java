@@ -35,6 +35,11 @@ import org.apache.skywalking.oap.server.receiver.trace.provider.handler.v8.rest.
 import org.apache.skywalking.oap.server.receiver.trace.provider.handler.v8.rest.TraceSegmentReportSingleServletHandler;
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 
+/**
+ * TODO OAP入口
+ * 跟踪模块提供程序
+ * OAP 接受 Agent服务前 启动GRpc服务和Http服务
+ */
 public class TraceModuleProvider extends ModuleProvider {
 
     @Override
@@ -60,18 +65,19 @@ public class TraceModuleProvider extends ModuleProvider {
     @Override
     public void start() {
         /**
-         * 从 GRPC获取积压的消息
          * {@link org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModuleProvider}
          */
+        // 从 GRPC获取积压的消息
         GRPCHandlerRegister grpcHandlerRegister = getManager().find(SharingServerModule.NAME)
-                                                              .provider()
-                                                              .getService(GRPCHandlerRegister.class);
+                .provider()
+                .getService(GRPCHandlerRegister.class);
         // 从 HTTP获取积压消息
         JettyHandlerRegister jettyHandlerRegister = getManager().find(SharingServerModule.NAME)
-                                                                .provider()
-                                                                .getService(JettyHandlerRegister.class);
-
+                .provider()
+                .getService(JettyHandlerRegister.class);
+        // TraceSegmentReportServiceHandler.collect() OAP接收Agent链路跟踪的数据入口
         TraceSegmentReportServiceHandler traceSegmentReportServiceHandler = new TraceSegmentReportServiceHandler(getManager());
+        // 处理消息
         grpcHandlerRegister.addHandler(traceSegmentReportServiceHandler);
         grpcHandlerRegister.addHandler(new TraceSegmentReportServiceHandlerCompat(traceSegmentReportServiceHandler));
 
@@ -86,12 +92,12 @@ public class TraceModuleProvider extends ModuleProvider {
 
     @Override
     public String[] requiredModules() {
-        return new String[] {
-            TelemetryModule.NAME,
-            CoreModule.NAME,
-            AnalyzerModule.NAME,
-            SharingServerModule.NAME,
-            ConfigurationModule.NAME
+        return new String[]{
+                TelemetryModule.NAME,
+                CoreModule.NAME,
+                AnalyzerModule.NAME,
+                SharingServerModule.NAME,
+                ConfigurationModule.NAME
         };
     }
 
