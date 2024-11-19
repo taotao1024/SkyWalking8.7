@@ -26,6 +26,8 @@ import org.apache.skywalking.oap.server.analyzer.provider.AnalyzerModuleConfig;
 
 /**
  * The open service to the receivers.
+ * <p>
+ * 对接收方的开放服务
  */
 @RequiredArgsConstructor
 public class SegmentParserServiceImpl implements ISegmentParserService {
@@ -37,6 +39,7 @@ public class SegmentParserServiceImpl implements ISegmentParserService {
     @Override
     public void send(SegmentObject segment) {
         final TraceAnalyzer traceAnalyzer = new TraceAnalyzer(moduleManager, listenerManager, config);
+        // 数据分析
         traceAnalyzer.doAnalysis(segment);
     }
 }

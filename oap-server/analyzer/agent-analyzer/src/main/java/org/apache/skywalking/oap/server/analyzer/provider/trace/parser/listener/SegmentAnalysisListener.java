@@ -127,20 +127,30 @@ public class SegmentAnalysisListener implements FirstAnalysisListener, EntryAnal
 
     @Override
     public void parseSegment(SegmentObject segmentObject) {
+        // Segment.traceId
         segment.setTraceId(segmentObject.getTraceId());
+        // 遍历 Segment中 所有的 Span
         segmentObject.getSpansList().forEach(span -> {
+            // 开始时间
             if (startTimestamp == 0 || startTimestamp > span.getStartTime()) {
                 startTimestamp = span.getStartTime();
             }
+            // 结束时间
             if (span.getEndTime() > endTimestamp) {
                 endTimestamp = span.getEndTime();
             }
+            // isError() --> FromEntrySpan、FormFirstSpan、FormSpanStatus
+            // isError 默认值为 false
+            // segmentStatusAnalyzer 由 Factory 进行初始化
             isError = isError || segmentStatusAnalyzer.isError(span);
+            // 收集 Span 中的信息到 Tag 中
             appendSearchableTags(span);
         });
+        // 耗时
         final long accurateDuration = endTimestamp - startTimestamp;
+        // 时间间隔
         duration = accurateDuration > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) accurateDuration;
-
+        // 默认值为 SAMPLE_STATUS.UNKNOWN
         if (sampleStatus.equals(SAMPLE_STATUS.UNKNOWN) || sampleStatus.equals(SAMPLE_STATUS.IGNORE)) {
             if (sampler.shouldSample(segmentObject.getTraceId())) {
                 sampleStatus = SAMPLE_STATUS.SAMPLED;
@@ -200,6 +210,11 @@ public class SegmentAnalysisListener implements FirstAnalysisListener, EntryAnal
         private final SegmentStatusAnalyzer segmentStatusAnalyzer;
         private final TraceLatencyThresholdsAndWatcher traceLatencyThresholdsAndWatcher;
 
+        /**
+         *
+         * @param moduleManager
+         * @param config {@link AnalyzerModuleConfig}
+         */
         public Factory(ModuleManager moduleManager, AnalyzerModuleConfig config) {
             this.sourceReceiver = moduleManager.find(CoreModule.NAME).provider().getService(SourceReceiver.class);
             final ConfigService configService = moduleManager.find(CoreModule.NAME)
@@ -213,6 +228,7 @@ public class SegmentAnalysisListener implements FirstAnalysisListener, EntryAnal
                                               .getService(NamingControl.class);
             this.segmentStatusAnalyzer = SegmentStatusStrategy.findByName(config.getSegmentStatusAnalysisStrategy())
                                                               .getExceptionAnalyzer();
+            // 查看 application.yml 文件 得到  config.getSegmentStatusAnalysisStrategy()的值默认是 FROM_SPAN_STAT
             this.traceLatencyThresholdsAndWatcher = config.getTraceLatencyThresholdsAndWatcher();
         }
 

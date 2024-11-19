@@ -27,11 +27,12 @@ import org.apache.skywalking.oap.server.analyzer.provider.trace.TraceSampleRateW
 public class TraceSegmentSampler {
     private TraceSampleRateWatcher traceSampleRateWatcher;
 
-    public TraceSegmentSampler(TraceSampleRateWatcher traceSampleRateWatcher) {
+    public  TraceSegmentSampler(TraceSampleRateWatcher traceSampleRateWatcher) {
         this.traceSampleRateWatcher = traceSampleRateWatcher;
     }
 
     public boolean shouldSample(String traceId) {
+        // 计算 sample 的值: Hash 与 10000 取余
         return Math.abs(traceId.hashCode()) % 10000 < traceSampleRateWatcher.getSampleRate();
     }
 }

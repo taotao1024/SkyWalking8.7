@@ -38,33 +38,43 @@ import org.apache.skywalking.oap.server.library.module.ModuleManager;
 @RequiredArgsConstructor
 public class TraceAnalyzer {
     private final ModuleManager moduleManager;
+    /**
+     *
+     */
     private final SegmentParserListenerManager listenerManager;
     private final AnalyzerModuleConfig config;
     private List<AnalysisListener> analysisListeners = new ArrayList<>();
 
     public void doAnalysis(SegmentObject segmentObject) {
-        if (segmentObject.getSpansList().size() == 0) {
+        // 如果没有segment中没有span 则返回
+        if (segmentObject.getSpansList().isEmpty()) {
             return;
         }
-
+        // 遍历 listenerManager对应的 SegmentParserListenerManager 对象的 spanListenerFactories 属性
+        // 把每一个XxxListener.Factory() 去执行 create()
         createSpanListeners();
-
+        // 匹配出 analysisAnalysisListener 去执行 parseSegment()
         notifySegmentListener(segmentObject);
-
+        // 遍历所有的Segment
         segmentObject.getSpansList().forEach(spanObject -> {
+            // 通过SpanId 判断是否为第一个Span
             if (spanObject.getSpanId() == 0) {
+                // parseFirst()
                 notifyFirstListener(spanObject, segmentObject);
             }
-
+            // 如果匹配 则执行
             if (SpanType.Exit.equals(spanObject.getSpanType())) {
+                // parseExit()
                 notifyExitListener(spanObject, segmentObject);
             } else if (SpanType.Entry.equals(spanObject.getSpanType())) {
+                // parseEntry()
                 notifyEntryListener(spanObject, segmentObject);
             } else if (SpanType.Local.equals(spanObject.getSpanType())) {
+                // parseLocal()
                 notifyLocalListener(spanObject, segmentObject);
             } else {
-                log.error("span type value was unexpected, span type name: {}", spanObject.getSpanType()
-                                                                                          .name());
+                log.error("span type value was unexpected, span type name: {}",
+                        spanObject.getSpanType().name());
             }
         });
 
@@ -116,9 +126,12 @@ public class TraceAnalyzer {
     }
 
     private void createSpanListeners() {
+        // 遍历 listenerManager 的属性 并调用 create() 实例化Xxx
         listenerManager.getSpanListenerFactories()
                        .forEach(
                            spanListenerFactory -> analysisListeners.add(
-                               spanListenerFactory.create(moduleManager, config)));
+                               spanListenerFactory.create(moduleManager, config)
+                           )
+                       );
     }
 }

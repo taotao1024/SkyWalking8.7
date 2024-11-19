@@ -63,6 +63,11 @@ public class TraceSegmentReportServiceHandler extends TraceSegmentReportServiceG
     @Override
     public StreamObserver<SegmentObject> collect(StreamObserver<Commands> responseObserver) {
         return new StreamObserver<SegmentObject>() {
+            /**
+             * 获取了从Agent侧发送来的SegmentObject数据
+             *
+             * @param segment
+             */
             @Override
             public void onNext(SegmentObject segment) {
                 if (log.isDebugEnabled()) {
@@ -71,6 +76,7 @@ public class TraceSegmentReportServiceHandler extends TraceSegmentReportServiceG
 
                 HistogramMetrics.Timer timer = histogram.createTimer();
                 try {
+                    // 数据处理
                     segmentParserService.send(segment);
                 } catch (Exception e) {
                     errorCounter.inc();
@@ -80,12 +86,20 @@ public class TraceSegmentReportServiceHandler extends TraceSegmentReportServiceG
                 }
             }
 
+            /**
+             * 异常处理
+             *
+             * @param throwable
+             */
             @Override
             public void onError(Throwable throwable) {
                 log.error(throwable.getMessage(), throwable);
                 responseObserver.onCompleted();
             }
 
+            /**
+             * 返回给Agent侧 表示数据接收完成
+             */
             @Override
             public void onCompleted() {
                 responseObserver.onNext(Commands.newBuilder().build());
