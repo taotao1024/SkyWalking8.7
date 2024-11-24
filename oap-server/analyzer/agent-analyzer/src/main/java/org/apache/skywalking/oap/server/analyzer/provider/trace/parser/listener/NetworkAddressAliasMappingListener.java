@@ -38,8 +38,16 @@ import org.apache.skywalking.oap.server.analyzer.provider.AnalyzerModuleConfig;
  * between network address and current service and instance. The alias relationship will be used in the {@link
  * MultiScopesAnalysisListener#parseExit(SpanObject, SegmentObject)} to setup the accurate target destination service
  * and instance.
- *
+ * <p>
  * This is a key point of SkyWalking header propagation protocol.
+ * <p>
+ * NetworkAddressAliasMappingListener的作用:
+ * 在一个分布式系统中，服务A可能通过某个IP地址访问服务B，然而这个IP地址并不直接对应服务B的逻辑名称。
+ * NetworkAddressAliasMappingListener的工作就是识别并记录这种地址与服务之间的关系。例如:
+ * 服务A调用192.168.1.2:8080这个地址，SkyWalking会通过NetworkAddressAliasMappingListener知道这个地址实际上对应服务B的实例
+ * 当服务A调用这个地址时，SkyWalking可以正确地将调用链条展示为"服务A调用了服务B"，而不是"服务A调用了192.168.1.2:8080"
+ * <p>
+ * 最终NetworkAddressAliasMappingListener是通过维护所络地址和服务实例之间的映射关系，确保分布式调用链的完整性和准确性
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -56,29 +64,37 @@ public class NetworkAddressAliasMappingListener implements EntryAnalysisListener
         if (log.isDebugEnabled()) {
             log.debug("service instance mapping listener parse reference");
         }
+        // 判断spanspanLayer属性
         if (!span.getSpanLayer().equals(SpanLayer.MQ)) {
+            // 只有在EntrySpan中 refs属性才不会为空 所以refs中记录的是当前segment关联的上级segment
             span.getRefsList().forEach(segmentReference -> {
+                // 仅处理 跨进程调用
                 if (RefType.CrossProcess.equals(segmentReference.getRefType())) {
                     final String networkAddressUsedAtPeer = namingControl.formatServiceName(
-                        segmentReference.getNetworkAddressUsedAtPeer());
+                            segmentReference.getNetworkAddressUsedAtPeer());
                     if (config.getUninstrumentedGatewaysConfig().isAddressConfiguredAsGateway(
-                        networkAddressUsedAtPeer)) {
+                            networkAddressUsedAtPeer)) {
                         /*
                          * If this network address has been set as an uninstrumented gateway, no alias should be set.
                          */
                         return;
                     }
+                    // 格式化 serviceName
                     final String serviceName = namingControl.formatServiceName(segmentObject.getService());
+                    // 格式化 instanceName
                     final String instanceName = namingControl.formatInstanceName(
-                        segmentObject.getServiceInstance());
-
+                            segmentObject.getServiceInstance());
+                    // NetworkAddressAliasSetup 是一个 source
                     final NetworkAddressAliasSetup networkAddressAliasSetup = new NetworkAddressAliasSetup();
                     networkAddressAliasSetup.setAddress(networkAddressUsedAtPeer);
                     networkAddressAliasSetup.setRepresentService(serviceName);
                     networkAddressAliasSetup.setRepresentServiceNodeType(NodeType.Normal);
                     networkAddressAliasSetup.setRepresentServiceInstance(instanceName);
                     networkAddressAliasSetup.setTimeBucket(TimeBucket.getMinuteTimeBucket(span.getStartTime()));
-
+                    /**
+                     * sourceReceiver 是从 CoreModuleProvider中获取的 SourceReceiverImpl实例化对象
+                     * {@link org.apache.skywalking.oap.server.core.source.SourceReceiverImpl}
+                     */
                     sourceReceiver.receive(networkAddressAliasSetup);
                 }
 
@@ -102,8 +118,8 @@ public class NetworkAddressAliasMappingListener implements EntryAnalysisListener
         public Factory(ModuleManager moduleManager) {
             this.sourceReceiver = moduleManager.find(CoreModule.NAME).provider().getService(SourceReceiver.class);
             this.namingControl = moduleManager.find(CoreModule.NAME)
-                                              .provider()
-                                              .getService(NamingControl.class);
+                    .provider()
+                    .getService(NamingControl.class);
         }
 
         @Override

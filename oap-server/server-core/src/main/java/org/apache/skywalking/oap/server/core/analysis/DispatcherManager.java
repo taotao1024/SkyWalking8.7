@@ -47,7 +47,14 @@ public class DispatcherManager implements DispatcherDetectorListener {
         if (source == null) {
             return;
         }
-
+        // ServiceMeta -->  ServiceMetaDispatcher
+        // CacheSlowAccess  CacheSlowAccessDispatcher
+        // CacheAccess      CacheAccessDispatcher
+        // DatabaseSlowStatement    DatabaseSlowStatementDispatcher
+        // EndpointMeta
+        // DatabaseAccess
+        // MqAccess
+        // MqEndpointAccess
         List<SourceDispatcher> dispatchers = dispatcherMap.get(source.scope());
 
         /**
