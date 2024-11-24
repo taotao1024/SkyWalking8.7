@@ -18,3 +18,5 @@ There are two ways to configure ignore patterns. Settings through system env has
 trace.ignore_path=/your/path/1/**,/your/path/2/**
 ```
 
+## 忽略指定的链路追踪
+
