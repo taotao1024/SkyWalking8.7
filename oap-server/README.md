@@ -1,4 +1,82 @@
+# OAP端
+
+oap-server
+-
 - [analyzer](analyzer) - 分析器 LAL(Log Analysis Language)
-- [exporter](exporter) - 出口
+  - [agent-analyzer](analyzer%2Fagent-analyzer) - JVM、链路、数据解析和指标数据
+  - [event-analyzer](analyzer%2Fevent-analyzer) - 事件解析
+  - [log-analyzer](analyzer%2Flog-analyzer) - 日志解析
+  - [meter-analyzer](analyzer%2Fmeter-analyzer) - 负责分析和处理从应用程序(K8S、Prometheus)收集的性能指标数据
+  - 这里可以添加模块，自定义数据分析器
+- [exporter](exporter) - 提供GRPC出口
 - [oal-grammar](oal-grammar) - OAL语法
-- [oal-rt](oal-rt) - OAL读取器和解析器(Anltr-V4)
+- [oal-rt](oal-rt) - OAL-runtime读取器和解析器(Anltr-V4)
+- [server-alarm-plugin](server-alarm-plugin) - 告警插件
+- [server-bootstrap](server-bootstrap) - OAP Web启动
+- [server-cluster-plugin](server-cluster-plugin) - 集群
+  - [cluster-consul-plugin](server-cluster-plugin%2Fcluster-consul-plugin) - 集群领导者插件
+  - [cluster-etcd-plugin](server-cluster-plugin%2Fcluster-etcd-plugin) - 集群模式 ETCD
+  - [cluster-kubernetes-plugin](server-cluster-plugin%2Fcluster-kubernetes-plugin) - 集群模式 k8s
+  - [cluster-nacos-plugin](server-cluster-plugin%2Fcluster-nacos-plugin) - 集群模式 nacos
+  - [cluster-standalone-plugin](server-cluster-plugin%2Fcluster-standalone-plugin) - 单机模式 单节点 
+  - [cluster-zookeeper-plugin](server-cluster-plugin%2Fcluster-zookeeper-plugin) - 集群模式 ZK
+-  [server-configuration](server-configuration) - 服务配置
+  - [configuration-api](server-configuration%2Fconfiguration-api) - 配置接口
+  - [configuration-apollo](server-configuration%2Fconfiguration-apollo) - Apollo 配置中心
+  - [configuration-consul](server-configuration%2Fconfiguration-consul) - Spring Consul 配置中心
+  - [configuration-etcd](server-configuration%2Fconfiguration-etcd) - etcd(分布式KV存储) 配置中心
+  - [configuration-k8s-configmap](server-configuration%2Fconfiguration-k8s-configmap) - k8s
+  - [configuration-nacos](server-configuration%2Fconfiguration-nacos) - nacos
+  - [configuration-zookeeper](server-configuration%2Fconfiguration-zookeeper) - zookeeper
+  - [grpc-configuration-sync](server-configuration%2Fgrpc-configuration-sync) - grpc
+- [server-core](server-core) - OAP服务核心模块
+  - 可以重构L1、L2数据聚合
+- [server-fetcher-plugin](server-fetcher-plugin) - 提取器
+  - [kafka-fetcher-plugin](server-fetcher-plugin%2Fkafka-fetcher-plugin) - 基于Kafka的数据拉取
+  - [prometheus-fetcher-plugin](server-fetcher-plugin%2Fprometheus-fetcher-plugin) - 基于Netty的Prometheus数据拉取
+- [server-health-checker](server-health-checker) - 健康检查
+- [server-library](server-library) - 公共模块部分
+  - [library-client](server-library%2Flibrary-client)
+  - [library-module](server-library%2Flibrary-module)
+  - [library-server](server-library%2Flibrary-server)
+  - [library-util](server-library%2Flibrary-util)
+- [server-query-plugin](server-query-plugin) - 处理的是SKywalking前台发过来的查询请求
+  - [query-graphql-plugin](server-query-plugin%2Fquery-graphql-plugin) - graphQL从查询处理
+  - 这里自定义RestFull风格的查询处理
+- [server-receiver-plugin](server-receiver-plugin) - 接收器
+  - [configuration-discovery-receiver-plugin](server-receiver-plugin%2Fconfiguration-discovery-receiver-plugin)
+  - [envoy-metrics-receiver-plugin](server-receiver-plugin%2Fenvoy-metrics-receiver-plugin)
+  - [otel-receiver-plugin](server-receiver-plugin%2Fotel-receiver-plugin)
+  - [receiver-proto](server-receiver-plugin%2Freceiver-proto)
+  - [skywalking-browser-receiver-plugin](server-receiver-plugin%2Fskywalking-browser-receiver-plugin)
+  - [skywalking-clr-receiver-plugin](server-receiver-plugin%2Fskywalking-clr-receiver-plugin)
+  - [skywalking-event-receiver-plugin](server-receiver-plugin%2Fskywalking-event-receiver-plugin)
+  - [skywalking-jvm-receiver-plugin](server-receiver-plugin%2Fskywalking-jvm-receiver-plugin)
+  - [skywalking-log-recevier-plugin](server-receiver-plugin%2Fskywalking-log-recevier-plugin)
+  - [skywalking-management-receiver-plugin](server-receiver-plugin%2Fskywalking-management-receiver-plugin)
+  - [skywalking-mesh-receiver-plugin](server-receiver-plugin%2Fskywalking-mesh-receiver-plugin)
+  - [skywalking-meter-receiver-plugin](server-receiver-plugin%2Fskywalking-meter-receiver-plugin)
+  - [skywalking-profile-receiver-plugin](server-receiver-plugin%2Fskywalking-profile-receiver-plugin)
+  - [skywalking-sharing-server-plugin](server-receiver-plugin%2Fskywalking-sharing-server-plugin)
+  - [skywalking-trace-receiver-plugin](server-receiver-plugin%2Fskywalking-trace-receiver-plugin)
+  - [skywalking-zabbix-receiver-plugin](server-receiver-plugin%2Fskywalking-zabbix-receiver-plugin)
+  - [zipkin-receiver-plugin](server-receiver-plugin%2Fzipkin-receiver-plugin)
+- [server-starter](server-starter) - OAP 服务启动
+- [server-starter-es7](server-starter-es7) - OAP 后端使用ES启动
+- [server-storage-plugin](server-storage-plugin) - 存储模块
+  - [storage-elasticsearch7-plugin](server-storage-plugin%2Fstorage-elasticsearch7-plugin) - elasticsearch 
+    - 分布式RESTful 搜索和分析引擎、可扩展的数据存储和向量数据库
+  - [storage-elasticsearch-plugin](server-storage-plugin%2Fstorage-elasticsearch-plugin) - elasticsearch 新特性升级
+  - [storage-influxdb-plugin](server-storage-plugin%2Fstorage-influxdb-plugin) - 分布式时序、事件和指标数据库
+  - [storage-jdbc-hikaricp-plugin](server-storage-plugin%2Fstorage-jdbc-hikaricp-plugin) - Java数据库连接池库
+    - 添加自定义数据库
+  - [storage-tidb-plugin](server-storage-plugin%2Fstorage-tidb-plugin) - 分布式关系型数据库
+  - [storage-zipkin-elasticsearch7-plugin](server-storage-plugin%2Fstorage-zipkin-elasticsearch7-plugin) - 分布式实时数据追踪系统
+- [server-telemetry](server-telemetry) - 服务监控
+  - [telemetry-api](server-telemetry%2Ftelemetry-api)
+  - [telemetry-prometheus](server-telemetry%2Ftelemetry-prometheus)
+- [server-testing](server-testing) - 测试服务
+- [server-tools](server-tools) - 通用工具
+  - [profile-exporter](server-tools%2Fprofile-exporter) - 导出
+- 可以针对MQ进行扩展
+- 可以针对业务进行扩展

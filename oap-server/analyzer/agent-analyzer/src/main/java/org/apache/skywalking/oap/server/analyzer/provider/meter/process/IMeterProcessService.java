@@ -21,7 +21,11 @@ package org.apache.skywalking.oap.server.analyzer.provider.meter.process;
 import org.apache.skywalking.oap.server.library.module.Service;
 
 public interface IMeterProcessService extends Service {
-
+    /**
+     * 创建处理器
+     *
+     * @return 处理器
+     */
     MeterProcessor createProcessor();
 
 }

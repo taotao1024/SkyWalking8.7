@@ -23,6 +23,8 @@ import org.apache.skywalking.oap.server.library.module.ModuleManager;
 
 /**
  * {@code EventAnalyzerListener} represents the callback when OAP does the event data analysis.
+ * <p>
+ * {@code EventAnalyzerListener} 表示 OAP 进行事件数据分析时的回调
  */
 public interface EventAnalyzerListener {
     /**

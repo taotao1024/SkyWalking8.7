@@ -74,21 +74,26 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
 
     /**
      * This callback executes after all modules start up successfully.
+     * <p>
+     * 此回调在所有模块成功启动后执行。
      */
     public abstract void notifyAfterCompleted() throws ServiceNotProvidedException, ModuleStartException;
 
     /**
      * 所需模块
+     *
      * @return moduleDefine names which does this moduleDefine require?
      */
     public abstract String[] requiredModules();
 
     /**
      * Register an implementation for the service of this moduleDefine provider.
+     * <p>
+     * 为此模块的服务注册一个实现Define provide
      */
     @Override
     public final void registerServiceImplementation(Class<? extends Service> serviceType,
-        Service service) throws ServiceNotProvidedException {
+                                                    Service service) throws ServiceNotProvidedException {
         if (serviceType.isInstance(service)) {
             this.services.put(serviceType, service);
         } else {
@@ -99,6 +104,8 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
     /**
      * Make sure all required services have been implemented.
      * {@link org.apache.skywalking.oap.server.core.CoreModule#services()}
+     * <p>
+     * 确保已实施所有必需的服务。
      *
      * @param requiredServices must be implemented by the moduleDefine.
      * @throws ServiceNotProvidedException when exist unimplemented service.
@@ -120,8 +127,7 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
     }
 
     @Override
-    public @SuppressWarnings("unchecked")
-    <T extends Service> T getService(Class<T> serviceType) throws ServiceNotProvidedException {
+    public @SuppressWarnings("unchecked") <T extends Service> T getService(Class<T> serviceType) throws ServiceNotProvidedException {
         Service serviceImpl = services.get(serviceType);
         if (serviceImpl != null) {
             return (T) serviceImpl;
