@@ -54,6 +54,11 @@ for better performance. Read [the paper of STAM](https://wu-sheng.github.io/STAM
 - [Blog](https://skywalking.apache.org/blog/2020-04-13-apache-skywalking-profiling/) about Use Profiling to Fix the Blind Spot of Distributed Tracing
 - [Blog](https://skywalking.apache.org/blog/2020-12-03-obs-service-mesh-with-sw-and-als/) about observing Istio + Envoy service mesh with ALS solution.
 - [Blog](https://skywalking.apache.org/blog/obs-service-mesh-vm-with-sw-and-als/) about observing Istio + Envoy service mesh with ALS Metadata-Exchange mechanism (in VMs and / or Kubernetes).
+- [官方文档](https://github.com/apache/skywalking/tree/master/docs)
+- [中文存根](https://github.com/SkyAPM/document-cn-translation-of-skywalking)
+- [opentracing](https://github.com/opentracing-contrib/opentracing-specification-zh)
+- [OAL扩展](https://www.cnblogs.com/switchvov/p/15146092.html)
+- [环境搭建](https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/)
 
 NOTICE, SkyWalking 8.0+ uses [v3 protocols](docs/en/protocols/README.md). They are incompatible with previous releases.
 
