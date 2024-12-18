@@ -156,13 +156,13 @@ public class SharingServerModuleProvider extends ModuleProvider {
         if (Objects.nonNull(grpcServer)) {
             grpcServer.addHandler(new HealthCheckServiceHandler());
         }
-        // GRPC
+        // GRPC 于Agent通讯
         if (Objects.nonNull(receiverGRPCHandlerRegister)) {
             receiverGRPCHandlerRegister.setGrpcHandlerRegister(getManager().find(CoreModule.NAME)
                                                                            .provider()
                                                                            .getService(GRPCHandlerRegister.class));
         }
-        // Jetty
+        // Jetty 与UI通讯
         if (Objects.nonNull(receiverJettyHandlerRegister)) {
             receiverJettyHandlerRegister.setJettyHandlerRegister(getManager().find(CoreModule.NAME)
                                                                              .provider()

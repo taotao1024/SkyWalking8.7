@@ -10,6 +10,8 @@ oap-server
   - 这里可以添加模块，自定义数据分析器
 - [exporter](exporter) - 提供GRPC出口
 - [oal-grammar](oal-grammar) - OAL语法
+  - OAL聚焦于Service、ServiceInstance、EndPoint、其他Source对象的指标。基于Altlr与Javassist将OAL脚本转换为动态生成的类文件。
+  - 指标声明过程 -> 从某一个Scope（域）中获取数据、过滤(Filter)部分数据、使用聚合函数(Function)将数据聚合
 - [oal-rt](oal-rt) - OAL-runtime读取器和解析器(Anltr-V4)
 - [server-alarm-plugin](server-alarm-plugin) - 告警插件
 - [server-bootstrap](server-bootstrap) - OAP Web启动
@@ -31,7 +33,10 @@ oap-server
   - [grpc-configuration-sync](server-configuration%2Fgrpc-configuration-sync) - grpc
 - [server-core](server-core) - OAP服务核心模块
   - 可以重构L1、L2数据聚合
-- [server-fetcher-plugin](server-fetcher-plugin) - 提取器
+  - [DownSamplingConfigService.java](server-core%2Fsrc%2Fmain%2Fjava%2Forg%2Fapache%2Fskywalking%2Foap%2Fserver%2Fcore%2Fconfig%2FDownSamplingConfigService.java) 降低采样，通过减少数据采集，降低存储压力。
+  - [SourceReceiver.java](server-core%2Fsrc%2Fmain%2Fjava%2Forg%2Fapache%2Fskywalking%2Foap%2Fserver%2Fcore%2Fsource%2FSourceReceiver.java) 添加数据上报的处理服务
+  - [NetworkAddressAliasCache.java](server-core%2Fsrc%2Fmain%2Fjava%2Forg%2Fapache%2Fskywalking%2Foap%2Fserver%2Fcore%2Fcache%2FNetworkAddressAliasCache.java) Address别名缓存
+- [server-fetcher-plugin](server-fetcher-plugin) - 提取器（主动拉取数据）
   - [kafka-fetcher-plugin](server-fetcher-plugin%2Fkafka-fetcher-plugin) - 基于Kafka的数据拉取
   - [prometheus-fetcher-plugin](server-fetcher-plugin%2Fprometheus-fetcher-plugin) - 基于Netty的Prometheus数据拉取
 - [server-health-checker](server-health-checker) - 健康检查
@@ -43,7 +48,7 @@ oap-server
 - [server-query-plugin](server-query-plugin) - 处理的是SKywalking前台发过来的查询请求
   - [query-graphql-plugin](server-query-plugin%2Fquery-graphql-plugin) - graphQL从查询处理
   - 这里自定义RestFull风格的查询处理
-- [server-receiver-plugin](server-receiver-plugin) - 接收器
+- [server-receiver-plugin](server-receiver-plugin) - 接收器（被动接收数据）
   - [configuration-discovery-receiver-plugin](server-receiver-plugin%2Fconfiguration-discovery-receiver-plugin)
   - [envoy-metrics-receiver-plugin](server-receiver-plugin%2Fenvoy-metrics-receiver-plugin)
   - [otel-receiver-plugin](server-receiver-plugin%2Fotel-receiver-plugin)
