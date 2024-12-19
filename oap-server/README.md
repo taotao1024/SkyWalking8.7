@@ -54,9 +54,9 @@ public class StorageModule extends ModuleDefine {
 
   public Class[] services() {
     return new Class[] {
-      // ...
-      ITraceQueryDAO.class,
-      // ...
+            // ...
+            ITraceQueryDAO.class,
+            // ...
     };
   }
 }
@@ -79,22 +79,22 @@ public class StorageModule extends ModuleDefine {
   /**
    * NAME代表模块的名称，该名称与配置文件中的名称要一致
    */
-    public static final String NAME = "storage";
+  public static final String NAME = "storage";
 
-    public StorageModule() {
-        super(NAME);
-    }
+  public StorageModule() {
+    super(NAME);
+  }
 
   /**
    * services方法中代表该模块能够提供哪些服务实现
    * @return Class[]
    */
   @Override
-    public Class[] services() {
-        return new Class[] {
+  public Class[] services() {
+    return new Class[] {
             StorageDAO.class,
-        };
-    }
+    };
+  }
 }
 ```
 
@@ -137,11 +137,11 @@ public class StorageModule extends ModuleDefine {
 ```java
 public class StorageModuleElasticsearchProvider extends ModuleProvider {
 
-    public void prepare() throws ServiceNotProvidedException {
-        // ...
-        this.registerServiceImplementation(StorageDAO.class, new StorageEsDAO(elasticSearchClient));
-        // ...
-    }
+  public void prepare() throws ServiceNotProvidedException {
+    // ...
+    this.registerServiceImplementation(StorageDAO.class, new StorageEsDAO(elasticSearchClient));
+    // ...
+  }
 }
 ```
 - [storage-influxdb-plugin](server-storage-plugin\storage-influxdb-plugin) - 分布式时序、事件和指标数据库

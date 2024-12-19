@@ -44,17 +44,20 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
     }
 
     /**
+     * provider的名称与上面的模块配置中selector选择的名称对应
+     *
      * @return the name of this provider.
      */
     public abstract String name();
 
     /**
+     * 返回具体模块的类型
      * @return the moduleDefine name
      */
     public abstract Class<? extends ModuleDefine> module();
 
     /**
-     *
+     * 方法会返回该模块的配置
      */
     public abstract ModuleConfig createConfigBeanIfAbsent();
 

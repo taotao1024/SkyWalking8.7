@@ -6,12 +6,12 @@ SkyWalking8.7版本源码解析
 
 **SkyWalking**: 一种 APM（应用程序性能监控器）系统，专为微服务、云原生和基于容器(Docker、K8s、Mesos)的架构而设计。
 
-![skywalking-框架图](docs/cn/skywalking-框架图.jpeg)
+![skywalking-框架图](docs/cn/oap/skywalking-框架图.jpeg)
 
  - Agent端
  - OAP端
 
-[模块结构](oap-server%2FREADME.md)
+[OAP模块结构](oap-server\README.md)
 
 # Abstract
 **SkyWalking** is an open source APM system, including monitoring, tracing, diagnosing capabilities for distributed system

@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 模块定义
  * A module definition.
  */
 public abstract class ModuleDefine implements ModuleProviderHolder {
