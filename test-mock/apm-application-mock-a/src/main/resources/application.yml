@@ -1,0 +1,30 @@
+server:
+  port: 10612
+spring:
+  application:
+    name: trade-lsy-client
+  datasource:
+    #url: jdbc:mysql://10.64.13.217:3306/sxnxapm?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://10.64.13.217:3306/sxnxapm?rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: Gientech@2024!
+esb:
+  svc:
+    httpHost: 127.0.0.1
+    httpPort: 10101
+dtp:
+  call:
+    nettyHost: 127.0.0.1
+    nettyPort: 19091
+    vertxHost: 127.0.0.1
+    vertxPort: 19092
+    grpcHost: 127.0.0.1
+    grpcPort: 19293
+svc:
+  network:
+    nettyHost: 127.0.0.1
+    nettyPort: 19191
+    vertxHost: 127.0.0.1
+    vertxPort: 19192
+    grpcHost: 127.0.0.1
+    grpcPort: 19193

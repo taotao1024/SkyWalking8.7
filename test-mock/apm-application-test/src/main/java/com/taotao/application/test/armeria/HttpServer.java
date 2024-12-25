@@ -1,4 +1,4 @@
-package com.armeria;
+package com.taotao.application.test.armeria;
 
 /**
  * https://armeria.dev/docs/server-basics/

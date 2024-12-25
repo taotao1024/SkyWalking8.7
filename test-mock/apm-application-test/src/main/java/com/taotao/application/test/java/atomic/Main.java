@@ -1,4 +1,4 @@
-package com.demo.java.atomic;
+package com.taotao.application.test.java.atomic;
 
 import jdk.nashorn.internal.ir.CallNode;
 import sun.misc.Unsafe;

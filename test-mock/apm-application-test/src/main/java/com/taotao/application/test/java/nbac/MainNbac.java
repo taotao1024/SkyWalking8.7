@@ -1,4 +1,4 @@
-package com.demo.java.nbac;
+package com.taotao.application.test.java.nbac;
 
 /**
  * JDK11 以后的版本 引入Nbac修复方法的二义性

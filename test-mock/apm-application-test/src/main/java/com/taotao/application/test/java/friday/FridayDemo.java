@@ -1,4 +1,4 @@
-package com.demo.java.friday;
+package com.taotao.application.test.java.friday;
 
 /**
  * 运行时编译工具

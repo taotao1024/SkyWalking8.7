@@ -1,4 +1,4 @@
-package com.demo.java.synthetic;
+package com.taotao.application.test.java.synthetic;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

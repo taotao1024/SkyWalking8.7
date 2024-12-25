@@ -1,4 +1,4 @@
-package com.demo.java.nbac;
+package com.taotao.application.test.java.nbac;
 
 import java.lang.reflect.Method;
 
