@@ -65,7 +65,7 @@ for better performance. Read [the paper of STAM](https://wu-sheng.github.io/STAM
 NOTICE, SkyWalking 8.0+ uses [v3 protocols](docs/en/protocols/README.md). They are incompatible with previous releases.
 
 # Downloads
-Please head to the [releases page](https://skywalking.apache.org/downloads/) to download a release of Apache SkyWalking.
+Please head to the [SkyWalking](https://skywalking.apache.org/downloads/)  or [Apache](https://archive.apache.org/dist/skywalking/) to download a release of Apache SkyWalking.
 
 # Compiling project
 Follow this [document](docs/en/guides/How-to-build.md).
@@ -75,7 +75,8 @@ This project adheres to the Contributor Covenant [code of conduct](https://www.a
 Please follow the [REPORTING GUIDELINES](https://www.apache.org/foundation/policies/conduct#reporting-guidelines) to report unacceptable behavior.
 
 # Live Demo
-Find the [demo](https://skywalking.apache.org/#demo) and [screenshots](https://skywalking.apache.org/#arch) on our website.
+
+Find the [有空了录制一个视频]() and [screenshots](https://skywalking.apache.org/#arch) on our website.
 
 **Video on youtube.com**
 
@@ -91,22 +92,6 @@ Find the [demo](https://skywalking.apache.org/#demo) and [screenshots](https://s
 # Our Users
 Hundreds of companies and organizations use SkyWalking for research, production, and commercial product.
 Visit our [website](http://skywalking.apache.org/#users) to find the user page.
-
-
-# Landscapes
-
-<p align="center">
-<br/><br/>
-<img src="https://landscape.cncf.io/images/left-logo.svg" width="150"/>&nbsp;&nbsp;<img src="https://landscape.cncf.io/images/right-logo.svg" width="200"/>
-<br/><br/>
-SkyWalking enriches the <a href="https://landscape.cncf.io/landscape=observability-and-analysis&license=apache-license-2-0">CNCF CLOUD NATIVE Landscape.</a>
-
-</p>
-
-<p align="center">
-<a href="https://openapm.io"><img src="https://openapm.io/static/media/openapm_logo.svg" width="100"/></a>
-  <br/>Our project enriches the <a href="https://openapm.io">OpenAPM Landscape!</a>
-</p>
 
 # License
 [Apache 2.0 License.](LICENSE)
