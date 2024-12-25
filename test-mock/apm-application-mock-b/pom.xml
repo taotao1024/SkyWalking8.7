@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>apm-application-mock-a</artifactId>
+    <artifactId>apm-application-mock-b</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 

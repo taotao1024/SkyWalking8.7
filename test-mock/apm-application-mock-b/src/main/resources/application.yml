@@ -1,25 +1,25 @@
 server:
-  port: 10100
+  port: 10200
 spring:
   application:
-    name: mock-a
+    name: mock-b
 # 调用服务
 mock:
   call:
+    nettyHost: 127.0.0.1
+    nettyPort: 10302
+    vertxHost: 127.0.0.1
+    vertxPort: 10303
+    grpcHost: 127.0.0.1
+    grpcPort: 10304
+# 提供服务
+svc:
+  network:
+    httpHost: 127.0.0.1
+    httpPort: 10201
     nettyHost: 127.0.0.1
     nettyPort: 10202
     vertxHost: 127.0.0.1
     vertxPort: 10203
     grpcHost: 127.0.0.1
     grpcPort: 10204
-# 提供服务
-svc:
-  network:
-    httpHost: 127.0.0.1
-    httpPort: 10101
-    nettyHost: 127.0.0.1
-    nettyPort: 10102
-    vertxHost: 127.0.0.1
-    vertxPort: 10103
-    grpcHost: 127.0.0.1
-    grpcPort: 10104

@@ -1,6 +1,6 @@
-package com.taotao.application.mock.a.controller;
+package com.taotao.application.mock.c.controller;
 
-import com.taotao.application.mock.a.service.INetService;
+import com.taotao.application.mock.c.service.INetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
