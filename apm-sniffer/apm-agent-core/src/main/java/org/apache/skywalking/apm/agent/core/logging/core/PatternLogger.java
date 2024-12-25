@@ -25,6 +25,9 @@ import org.apache.skywalking.apm.util.StringUtil;
  * A flexible Logger configurable with pattern string. This is default implementation of {@link ILog} This can parse a
  * pattern to the List of converter with Parser. We package LogEvent with message, level,timestamp ..., passing around
  * to the List of converter to concat actually Log-String.
+ * <p>
+ * 一个灵活的 Logger，可配置模式 string。这是 ILog 的默认实现 这可以通过解析器将模式解析为 List of converter。
+ * 我们将 LogEvent 与 message、level、timestamp ...一起打包，传递给转换器的 List 以实际连接 Log-String。
  */
 public class PatternLogger extends AbstractLogger {
     public static final String DEFAULT_PATTERN = "%level %timestamp %thread %class : %msg %throwable";

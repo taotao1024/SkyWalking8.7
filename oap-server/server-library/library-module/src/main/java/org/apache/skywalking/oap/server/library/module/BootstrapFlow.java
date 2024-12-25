@@ -43,10 +43,11 @@ class BootstrapFlow {
     void start(
         ModuleManager moduleManager) throws ModuleNotFoundException, ServiceNotProvidedException, ModuleStartException {
         for (ModuleProvider provider : startupSequence) {
-            LOGGER.info("start the provider {} in {} module.", provider.name(), provider.getModuleName());
+            LOGGER.info("start the provider [{}] in [{}] module. Start", provider.name(), provider.getModuleName());
             provider.requiredCheck(provider.getModule().services());
             // 初始化 操作句柄、监听器 等
             provider.start();
+            LOGGER.info("start the provider [{}] in [{}] module.  End ", provider.name(), provider.getModuleName());
         }
     }
 

@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ServiceLoader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,6 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
 
     /**
      * @return the module name
-     *
      */
     public final String name() {
         return name;
@@ -56,13 +56,15 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
 
     /**
      * Run the prepare stage for the module, including finding all potential providers, and asking them to prepare.
+     * <p>
+     * 运行模块的 prepare 阶段，包括查找所有潜在的提供商，并要求他们进行准备。
      *
      * @param moduleManager of this module
      * @param configuration of this module
      * @throws ProviderNotFoundException when even don't find a single one providers.
      */
     void prepare(ModuleManager moduleManager, ApplicationConfiguration.ModuleConfiguration configuration,
-        ServiceLoader<ModuleProvider> moduleProviderLoader) throws ProviderNotFoundException, ServiceNotProvidedException, ModuleConfigException, ModuleStartException {
+                 ServiceLoader<ModuleProvider> moduleProviderLoader) throws ProviderNotFoundException, ServiceNotProvidedException, ModuleConfigException, ModuleStartException {
         for (ModuleProvider provider : moduleProviderLoader) {
             if (!configuration.has(provider.name())) {
                 continue;
@@ -75,9 +77,9 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
                     loadedProvider.setModuleDefine(this);
                 } else {
                     throw new DuplicateProviderException(this.name() + " module has one " + loadedProvider.name() + "[" + loadedProvider
-                        .getClass()
-                        .getName() + "] provider already, " + provider.name() + "[" + provider.getClass()
-                                                                                              .getName() + "] is defined as 2nd provider.");
+                            .getClass()
+                            .getName() + "] provider already, " + provider.name() + "[" + provider.getClass()
+                            .getName() + "] is defined as 2nd provider.");
                 }
             }
 
@@ -91,7 +93,7 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
         try {
             // 配置项复制
             copyProperties(loadedProvider.createConfigBeanIfAbsent(), configuration.getProviderConfiguration(loadedProvider
-                .name()), this.name(), loadedProvider.name());
+                    .name()), this.name(), loadedProvider.name());
         } catch (IllegalAccessException e) {
             throw new ModuleConfigException(this.name() + " module config transport to config bean failure.", e);
         }
@@ -100,7 +102,7 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
     }
 
     private void copyProperties(ModuleConfig dest, Properties src, String moduleName,
-        String providerName) throws IllegalAccessException {
+                                String providerName) throws IllegalAccessException {
         if (dest == null) {
             return;
         }

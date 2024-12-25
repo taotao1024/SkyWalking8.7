@@ -8,10 +8,10 @@ SkyWalking8.7版本源码解析
 
 ![skywalking-框架图](docs/cn/oap/skywalking-框架图.jpeg)
 
- - Agent端
- - OAP端
-
-[OAP模块结构](oap-server\README.md)
+- Agent端
+  - [Agent模块结构](apm-sniffer\Agent-Readme.md)
+- OAP端
+  - [OAP模块结构](oap-server\Oap-readme.md)
 
 # Abstract
 **SkyWalking** is an open source APM system, including monitoring, tracing, diagnosing capabilities for distributed system
@@ -59,6 +59,8 @@ for better performance. Read [the paper of STAM](https://wu-sheng.github.io/STAM
 - [opentracing](https://github.com/opentracing-contrib/opentracing-specification-zh)
 - [OAL扩展](https://www.cnblogs.com/switchvov/p/15146092.html)
 - [环境搭建](https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/)
+- [基础概念](https://dbaplus.cn/news-134-5764-1.html)
+  - Skywalking中实现了OpenTracing中的Trace、Span、Tags、Logs等核心概念，不同之处是在Trace级别和Span级别之间加了一个Segment概念，用于表示一个服务实例内的Span集合
 
 NOTICE, SkyWalking 8.0+ uses [v3 protocols](docs/en/protocols/README.md). They are incompatible with previous releases.
 

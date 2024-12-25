@@ -65,7 +65,7 @@ public class ApplicationConfigLoader implements ConfigLoader<ApplicationConfigur
                 selectConfig(moduleConfig);
                 moduleConfig.forEach((moduleName, providerConfig) -> {
                     if (providerConfig.size() > 0) {
-                        log.info("Get a module define from application.yml, module name: {}", moduleName);
+                        log.info("Get a module   define from application.yml, module name: {}", moduleName);
                         // ApplicationConfiguration 添加Module: cluster、core、storage、agent-analyzer 等
                         ApplicationConfiguration.ModuleConfiguration moduleConfiguration = configuration.addModule(
                             moduleName);

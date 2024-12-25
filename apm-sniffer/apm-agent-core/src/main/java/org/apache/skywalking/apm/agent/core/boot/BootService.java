@@ -25,14 +25,20 @@ package org.apache.skywalking.apm.agent.core.boot;
  * 是所有远程的接口，当插件机制开始工作时，它们需要启动。
  * <p>
  * GRPCChannelManager Agent 到 OAP的核心模块，用于gRPC网络通讯
+ * <p>
  * ServiceManagementClient 和 OAP保持心跳(KeepAlive)、汇报当前客户端的状态
+ * <p>
  * ServiceInstanceGenerator 生成默认的实例标识符
+ * <p>
  * CommandService Command Scheduler 命令处理调度器
  * CommandExecutorService
+ * <p>
  * SamplingService  SamplingService是来控制是否要采样该链路。每条链路都是被追踪到的，但是考虑到序列化/反序列化
  * 的CPU消耗以及网络带宽，如果开启采样，SkyWalking Agent并不会把所有的链路都发送给OAP。默认
  * 采样是开启的，可以通过修改agent.config中的agent.sample_n_per_3_secs配置项控制每3秒最多采样
  * 多少条链路
+ * <p>
+ * LogReportServiceClient   日志发送接口自定义日志发送、需要实现该接口
  * GRPCLogReportServiceClient   日志发送
  */
 public interface BootService {

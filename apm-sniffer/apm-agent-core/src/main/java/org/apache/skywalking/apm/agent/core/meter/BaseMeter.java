@@ -26,6 +26,8 @@ import org.apache.skywalking.apm.network.language.agent.v3.MeterData;
 /**
  * BaseMeter is the basic class of all available meter implementations.
  * It includes all labels and unique id representing this meter.
+ * <p>
+ * BaseMeter 是所有可用 meter 实现的基本类。它包括表示此计量的所有标签和唯一 ID。
  */
 public abstract class BaseMeter {
     protected final MeterId meterId;

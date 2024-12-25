@@ -18,6 +18,9 @@
 
 package org.apache.skywalking.oap.server.library.module;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +31,8 @@ import java.util.ServiceLoader;
  * The <code>ModuleManager</code> takes charge of all {@link ModuleDefine}s in collector.
  */
 public class ModuleManager implements ModuleDefineHolder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModuleManager.class);
+
     private boolean isInPrepareStage = true;
     private final Map<String, ModuleDefine> loadedModules = new HashMap<>();
 
@@ -63,8 +68,10 @@ public class ModuleManager implements ModuleDefineHolder {
         // 遍历所有的ModuleDefine，根据与之对应的ModeleProvider依赖的ModuleDefine,对ModuleProvider进行排序，并排除了循环依赖的问题。
         BootstrapFlow bootstrapFlow = new BootstrapFlow(loadedModules);
         // 启动
+        LOGGER.info("----------------------- 启动各模块 配置的服务提供者 -----------------------");
         bootstrapFlow.start(this);
         // 通知
+        LOGGER.info("----------------------- 启动各模块 对应的回调函数  -----------------------");
         bootstrapFlow.notifyAfterCompleted();
     }
 
