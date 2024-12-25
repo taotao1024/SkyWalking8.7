@@ -2,11 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>apm</artifactId>
-        <groupId>org.apache.skywalking</groupId>
-        <version>8.7.0</version>
-    </parent>
 
     <groupId>com.taotao</groupId>
     <artifactId>apm-application-test</artifactId>
@@ -24,6 +19,12 @@
             <artifactId>armeria</artifactId>
             <version>1.31.0</version>
         </dependency>
+        <dependency>
+            <artifactId>apm</artifactId>
+            <groupId>org.apache.skywalking</groupId>
+            <version>8.7.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
