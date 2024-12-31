@@ -3,7 +3,20 @@ server:
 spring:
   application:
     name: mock-a
+  # Springboot2.6后 SpringMVC 处理映射匹配的默认策略已从AntPathMatcher变为PathPatternParser。
+  # 修改配置否则swagger启动报错
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 # 调用服务
+grpc:
+  client:
+    # gRPC的服务端名单 @GrpcClient 注解中会用到
+    mygrpc-server:
+      address: 'static://localhost:10204'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
 mock:
   call:
     nettyHost: 127.0.0.1

@@ -14,11 +14,11 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.linecorp.armeria/armeria -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.linecorp.armeria</groupId>
             <artifactId>armeria</artifactId>
             <version>1.31.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <artifactId>apm</artifactId>
             <groupId>org.apache.skywalking</groupId>

@@ -3,6 +3,11 @@ server:
 spring:
   application:
     name: mock-b
+grpc:
+  server:
+    port: 10204
+    #grpc默认最大传输数据量大小为4MB,可修改此配置
+    max-inbound-message-size: 4MB
 # 调用服务
 mock:
   call:

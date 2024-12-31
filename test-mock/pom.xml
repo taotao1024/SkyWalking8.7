@@ -14,5 +14,6 @@
         <module>apm-application-mock-b</module>
         <module>apm-application-mock-c</module>
         <module>apm-application-test</module>
+        <module>apm-base-grpc-protocol</module>
     </modules>
 </project>

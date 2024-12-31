@@ -12,6 +12,8 @@ SkyWalking8.7版本源码解析
   - [Agent模块结构](apm-sniffer%2FAgent-Readme.md)
 - OAP端
   - [OAP模块结构](oap-server%2FOap-readme.md)
+- Mock测试
+  - [Mock测试结构](test-mock%2FMock-Readme.md) 需要手动引入，不会被打入SW项目中
 
 # Abstract
 **SkyWalking** is an open source APM system, including monitoring, tracing, diagnosing capabilities for distributed system
