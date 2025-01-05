@@ -1,13 +1,17 @@
 package com.taotao.skywalking.oap.server.receiver.taotao;
 
+import com.taotao.skywalking.oap.server.receiver.taotao.service.ILogService;
+import com.taotao.skywalking.oap.server.receiver.taotao.service.ITaoService;
 import org.apache.skywalking.oap.server.library.module.ModuleDefine;
 
 public class TaotaoModule extends ModuleDefine {
+    /**
+     * oap-server/server-bootstrap/src/main/resources/application.yml
+     */
+    public static final String NAME = "taotao-receiver";
+
     public TaotaoModule() {
-        /**
-         * oap-server/server-bootstrap/src/main/resources/application.yml
-         */
-        super("receiver-taotao");
+        super(NAME);
     }
 
     /**
@@ -17,6 +21,9 @@ public class TaotaoModule extends ModuleDefine {
      */
     @Override
     public Class[] services() {
-        return new Class[0];
+        return new Class[]{
+                ILogService.class,
+                ITaoService.class,
+        };
     }
 }

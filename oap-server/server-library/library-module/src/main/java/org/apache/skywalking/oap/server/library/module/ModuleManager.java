@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -45,8 +46,14 @@ public class ModuleManager implements ModuleDefineHolder {
         String[] moduleNames = applicationConfiguration.moduleList();
         // SPI 加载 ModuleDefine
         ServiceLoader<ModuleDefine> moduleServiceLoader = ServiceLoader.load(ModuleDefine.class);
+        for (ModuleDefine moduleDefine : moduleServiceLoader) {
+            System.out.println(moduleDefine.name());
+        }
         // SPI 加载 ModuleProvider
         ServiceLoader<ModuleProvider> moduleProviderLoader = ServiceLoader.load(ModuleProvider.class);
+        for (ModuleProvider moduleProvider : moduleProviderLoader) {
+            System.out.println(moduleProvider.module());
+        }
         // moduleNames 去重
         HashSet<String> moduleSet = new HashSet<>(Arrays.asList(moduleNames));
         for (ModuleDefine module : moduleServiceLoader) {

@@ -511,3 +511,13 @@ configuration-discovery:
 receiver-event:
   selector: ${SW_RECEIVER_EVENT:default}
   default:
+
+taotao-receiver:
+  selector: ${SW_RECEIVER_TAOTAO:default}
+  default:
+    item: 1
+
+taotao-springmvc:
+  selector: ${SW_SPRINGMVC:default}
+  default:
+    port: 8080

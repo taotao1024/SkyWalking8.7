@@ -29,6 +29,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>query-graphql-plugin</module>
-        <module>query-springmvc-plugin</module>
+        <module>taotao-springmvc-plugin</module>
     </modules>
 </project>

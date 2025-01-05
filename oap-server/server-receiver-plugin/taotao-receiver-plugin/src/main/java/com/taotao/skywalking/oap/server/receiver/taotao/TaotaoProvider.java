@@ -1,6 +1,10 @@
 package com.taotao.skywalking.oap.server.receiver.taotao;
 
 import com.taotao.skywalking.oap.server.receiver.taotao.handler.http.TaotaoHandler;
+import com.taotao.skywalking.oap.server.receiver.taotao.service.ILogService;
+import com.taotao.skywalking.oap.server.receiver.taotao.service.ITaoService;
+import com.taotao.skywalking.oap.server.receiver.taotao.service.impl.ILogServiceImpl;
+import com.taotao.skywalking.oap.server.receiver.taotao.service.impl.ITaoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.skywalking.oap.server.configuration.api.ConfigurationModule;
 import org.apache.skywalking.oap.server.core.CoreModule;
@@ -40,6 +44,8 @@ public class TaotaoProvider extends ModuleProvider {
     @Override
     public void prepare() throws ServiceNotProvidedException, ModuleStartException {
         log.info("------------ 正在准备{} ------------", this.getClass().getName());
+        this.registerServiceImplementation(ILogService.class, new ILogServiceImpl());
+        this.registerServiceImplementation(ITaoService.class, new ITaoServiceImpl());
         log.info("------------ 正在准备{} ------------", this.getClass().getName());
     }
 
