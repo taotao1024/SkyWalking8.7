@@ -47,12 +47,12 @@ public class ModuleManager implements ModuleDefineHolder {
         // SPI 加载 ModuleDefine
         ServiceLoader<ModuleDefine> moduleServiceLoader = ServiceLoader.load(ModuleDefine.class);
         for (ModuleDefine moduleDefine : moduleServiceLoader) {
-            System.out.println(moduleDefine.name());
+            System.out.println("moduleServiceLoader --> " + moduleDefine.name());
         }
         // SPI 加载 ModuleProvider
         ServiceLoader<ModuleProvider> moduleProviderLoader = ServiceLoader.load(ModuleProvider.class);
         for (ModuleProvider moduleProvider : moduleProviderLoader) {
-            System.out.println(moduleProvider.module());
+            System.out.println("moduleProviderLoader --> " + moduleProvider.module());
         }
         // moduleNames 去重
         HashSet<String> moduleSet = new HashSet<>(Arrays.asList(moduleNames));
