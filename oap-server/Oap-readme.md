@@ -146,7 +146,9 @@ public class StorageModuleElasticsearchProvider extends ModuleProvider {
 ```
 - [storage-influxdb-plugin](server-storage-plugin%2Fstorage-influxdb-plugin) - 分布式时序、事件和指标数据库
 - [storage-jdbc-hikaricp-plugin](server-storage-plugin%2Fstorage-jdbc-hikaricp-plugin) - Java数据库连接池库
-  - 添加自定义数据库
+- 添加自定义数据库
+  - 1、支持 ```org.apache.skywalking.oap.server.core.storage.model.ModelInstaller``` 接口，实现表创建。
+  - 2、XxxProvider的start()方法调用 ```getManager().find(CoreModule.NAME).provider().getService(ModelCreator.class).addModelListener(installer);``` 实现创建表结构
 - [storage-tidb-plugin](server-storage-plugin%2Fstorage-tidb-plugin) - 分布式关系型数据库
 - [storage-zipkin-elasticsearch7-plugin](server-storage-plugin%2Fstorage-zipkin-elasticsearch7-plugin) - 分布式实时数据追踪系统
 - [server-telemetry](server-telemetry) - 自监控数据暴露模块
