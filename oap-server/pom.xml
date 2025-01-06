@@ -29,6 +29,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>server-core</module>
+        <module>server-core-extension</module>
         <module>analyzer</module>
         <module>server-receiver-plugin</module>
         <module>server-cluster-plugin</module>
@@ -57,6 +58,7 @@
         <zookeeper.image.version>3.5</zookeeper.image.version>
         <kafka-clients.version>2.4.1</kafka-clients.version>
         <spring-kafka-test.version>2.4.6.RELEASE</spring-kafka-test.version>
+        <revision>8.7.0</revision>
     </properties>
 
     <dependencies>

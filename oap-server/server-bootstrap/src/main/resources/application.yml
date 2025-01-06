@@ -516,8 +516,8 @@ taotao-receiver:
   selector: ${SW_RECEIVER_TAOTAO:default}
   default:
     item: 1
-#
-#taotao-springmvc:
-#  selector: ${SW_SPRINGMVC:default}
-#  default:
-#    port: 8080
+
+taotao-springmvc:
+  selector: ${SW_SPRINGMVC:default}
+  default:
+    port: 8080
