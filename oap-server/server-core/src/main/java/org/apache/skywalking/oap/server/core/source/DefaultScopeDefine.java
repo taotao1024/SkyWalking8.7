@@ -85,6 +85,9 @@ public class DefaultScopeDefine {
 
     public static final int SERVICE_INSTANCE_JVM_CLASS = 44;
 
+    // 自定义TaotaoSource
+    public static final int TAOTAO_SOURCE = 101;
+
     /**
      * Catalog of scope, the metrics processor could use this to group all generated metrics by oal rt.
      */

@@ -160,7 +160,7 @@ public class OALRuntime implements OALEngine {
         } catch (FileNotFoundException e) {
             throw new ModuleStartException("Can't locate " + oalDefine.getConfigFile(), e);
         }
-
+        // 解析.OAL文件内容
         OALScripts oalScripts;
         try {
             ScriptParser scriptParser = ScriptParser.createFromFile(read, oalDefine.getSourcePackage());
