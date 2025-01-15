@@ -18,13 +18,14 @@
 
 package org.apache.skywalking.oap.server.library.module;
 
+import org.apache.skywalking.oap.server.library.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.apache.skywalking.oap.server.library.util.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class BootstrapFlow {
     private static final Logger LOGGER = LoggerFactory.getLogger(BootstrapFlow.class);
@@ -40,20 +41,23 @@ class BootstrapFlow {
     }
 
     @SuppressWarnings("unchecked")
-    void start(
-        ModuleManager moduleManager) throws ModuleNotFoundException, ServiceNotProvidedException, ModuleStartException {
+    void start(ModuleManager moduleManager) throws ModuleNotFoundException, ServiceNotProvidedException, ModuleStartException {
+        int i = 0;
         for (ModuleProvider provider : startupSequence) {
-            LOGGER.info("start the provider [{}] in [{}] module. Start", provider.name(), provider.getModuleName());
+            LOGGER.info("start [{}/{}] the provider [{}] in [{}] module. Start", ++i, startupSequence.size(), provider.name(), provider.getModuleName());
             provider.requiredCheck(provider.getModule().services());
             // 初始化 操作句柄、监听器 等
             provider.start();
-            LOGGER.info("start the provider [{}] in [{}] module.  End ", provider.name(), provider.getModuleName());
+            LOGGER.info("start [{}/{}] the provider [{}] in [{}] module.  End ", i, startupSequence.size(), provider.name(), provider.getModuleName());
         }
     }
 
     void notifyAfterCompleted() throws ServiceNotProvidedException, ModuleStartException {
+        int i = 0;
         for (ModuleProvider provider : startupSequence) {
+            LOGGER.info("notify [{}/{}] the provider [{}] in [{}] module. Start", ++i, startupSequence.size(), provider.name(), provider.getModuleName());
             provider.notifyAfterCompleted();
+            LOGGER.info("notify [{}/{}] the provider [{}] in [{}] module.  End ", i, startupSequence.size(), provider.name(), provider.getModuleName());
         }
     }
 

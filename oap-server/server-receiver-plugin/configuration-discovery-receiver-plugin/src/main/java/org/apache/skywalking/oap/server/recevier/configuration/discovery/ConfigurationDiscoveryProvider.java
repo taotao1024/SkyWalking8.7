@@ -29,6 +29,9 @@ import org.apache.skywalking.oap.server.library.module.ServiceNotProvidedExcepti
 import org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModule;
 import org.apache.skywalking.oap.server.recevier.configuration.discovery.handler.grpc.ConfigurationDiscoveryServiceHandler;
 
+/**
+ * 配置发现
+ */
 public class ConfigurationDiscoveryProvider extends ModuleProvider {
 
     private AgentConfigurationsWatcher agentConfigurationsWatcher;

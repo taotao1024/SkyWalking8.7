@@ -18,8 +18,6 @@
 
 package org.apache.skywalking.oap.server.core.alarm.provider;
 
-import java.io.FileNotFoundException;
-import java.io.Reader;
 import org.apache.skywalking.oap.server.configuration.api.ConfigurationModule;
 import org.apache.skywalking.oap.server.configuration.api.DynamicConfigurationService;
 import org.apache.skywalking.oap.server.core.CoreModule;
@@ -33,6 +31,12 @@ import org.apache.skywalking.oap.server.library.module.ModuleStartException;
 import org.apache.skywalking.oap.server.library.module.ServiceNotProvidedException;
 import org.apache.skywalking.oap.server.library.util.ResourceUtils;
 
+import java.io.FileNotFoundException;
+import java.io.Reader;
+
+/**
+ * 告警
+ */
 public class AlarmModuleProvider extends ModuleProvider {
 
     private NotifyHandler notifyHandler;
@@ -75,8 +79,7 @@ public class AlarmModuleProvider extends ModuleProvider {
     public void start() throws ServiceNotProvidedException, ModuleStartException {
         DynamicConfigurationService dynamicConfigurationService = getManager().find(ConfigurationModule.NAME)
                                                                               .provider()
-                                                                              .getService(
-                                                                                  DynamicConfigurationService.class);
+                                                                              .getService(DynamicConfigurationService.class);
         dynamicConfigurationService.registerConfigChangeWatcher(alarmRulesWatcher);
     }
 

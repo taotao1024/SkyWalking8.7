@@ -29,6 +29,9 @@ import org.apache.skywalking.oap.server.core.config.NamingControl;
 import org.apache.skywalking.oap.server.library.module.ModuleManager;
 import org.apache.skywalking.oap.server.library.server.grpc.GRPCHandler;
 
+/**
+ * CLR 指标报告服务处理程序
+ */
 @Slf4j
 public class CLRMetricReportServiceHandler extends CLRMetricReportServiceGrpc.CLRMetricReportServiceImplBase implements GRPCHandler {
     private final CLRSourceDispatcher clrSourceDispatcher;

@@ -40,6 +40,10 @@ import org.apache.skywalking.oap.server.library.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 解析HTTP请求
+ * 用于GraphQL使用
+ */
 @RequiredArgsConstructor
 public class GraphQLQueryHandler extends JettyJsonHandler {
 

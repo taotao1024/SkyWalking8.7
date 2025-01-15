@@ -28,8 +28,8 @@ import org.apache.skywalking.oap.server.library.module.ModuleProvider;
 import org.apache.skywalking.oap.server.library.module.ModuleStartException;
 import org.apache.skywalking.oap.server.library.module.ServiceNotProvidedException;
 import org.apache.skywalking.oap.server.receiver.browser.module.BrowserModule;
-import org.apache.skywalking.oap.server.receiver.browser.provider.handler.grpc.BrowserPerfServiceHandlerCompat;
 import org.apache.skywalking.oap.server.receiver.browser.provider.handler.grpc.BrowserPerfServiceHandler;
+import org.apache.skywalking.oap.server.receiver.browser.provider.handler.grpc.BrowserPerfServiceHandlerCompat;
 import org.apache.skywalking.oap.server.receiver.browser.provider.handler.rest.BrowserErrorLogReportListServletHandler;
 import org.apache.skywalking.oap.server.receiver.browser.provider.handler.rest.BrowserErrorLogReportSingleServletHandler;
 import org.apache.skywalking.oap.server.receiver.browser.provider.handler.rest.BrowserPerfDataReportServletHandler;
@@ -41,6 +41,9 @@ import org.apache.skywalking.oap.server.receiver.browser.provider.parser.perform
 import org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModule;
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 
+/**
+ * 接收器预览
+ */
 public class BrowserModuleProvider extends ModuleProvider {
     private final BrowserServiceModuleConfig moduleConfig = new BrowserServiceModuleConfig();
 

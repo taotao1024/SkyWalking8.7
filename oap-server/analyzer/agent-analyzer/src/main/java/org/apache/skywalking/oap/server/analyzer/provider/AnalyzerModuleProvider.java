@@ -110,15 +110,15 @@ public class AnalyzerModuleProvider extends ModuleProvider {
     @Override
     public void start() throws ModuleStartException {
         // load official analysis
+        // 加载官方分析
         getManager().find(CoreModule.NAME)
                     .provider()
                     .getService(OALEngineLoaderService.class)
                     .load(CoreOALDefine.INSTANCE);
-
+        // 注册监听器
         DynamicConfigurationService dynamicConfigurationService = getManager().find(ConfigurationModule.NAME)
                                                                               .provider()
-                                                                              .getService(
-                                                                                  DynamicConfigurationService.class);
+                                                                              .getService(DynamicConfigurationService.class);
         dynamicConfigurationService.registerConfigChangeWatcher(thresholds);
         dynamicConfigurationService.registerConfigChangeWatcher(uninstrumentedGatewaysConfig);
         dynamicConfigurationService.registerConfigChangeWatcher(traceSampleRateWatcher);
@@ -147,6 +147,7 @@ public class AnalyzerModuleProvider extends ModuleProvider {
         SegmentParserListenerManager listenerManager = new SegmentParserListenerManager();
         if (moduleConfig.isTraceAnalysis()) {
             listenerManager.add(new MultiScopesAnalysisListener.Factory(getManager()));
+            // 地址别名
             listenerManager.add(new NetworkAddressAliasMappingListener.Factory(getManager()));
         }
         listenerManager.add(new SegmentAnalysisListener.Factory(getManager(), moduleConfig));

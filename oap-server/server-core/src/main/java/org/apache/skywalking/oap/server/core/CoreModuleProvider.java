@@ -18,10 +18,6 @@
 
 package org.apache.skywalking.oap.server.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.apache.skywalking.oap.server.configuration.api.ConfigurationModule;
 import org.apache.skywalking.oap.server.configuration.api.DynamicConfigurationService;
 import org.apache.skywalking.oap.server.core.analysis.ApdexThresholdConfig;
@@ -101,6 +97,11 @@ import org.apache.skywalking.oap.server.library.server.jetty.JettyServerConfig;
 import org.apache.skywalking.oap.server.library.util.ResourceUtils;
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 import org.apache.skywalking.oap.server.telemetry.api.TelemetryRelatedContext;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Core module provider includes the recommended and default implementations of {@link CoreModule#services()}. All
@@ -217,21 +218,17 @@ public class CoreModuleProvider extends ModuleProvider {
                                                                .port(moduleConfig.getRestPort())
                                                                .contextPath(moduleConfig.getRestContextPath())
                                                                .jettyIdleTimeOut(moduleConfig.getRestIdleTimeOut())
-                                                               .jettyAcceptorPriorityDelta(
-                                                                   moduleConfig.getRestAcceptorPriorityDelta())
+                                                               .jettyAcceptorPriorityDelta(                                                                   moduleConfig.getRestAcceptorPriorityDelta())
                                                                .jettyMinThreads(moduleConfig.getRestMinThreads())
                                                                .jettyMaxThreads(moduleConfig.getRestMaxThreads())
-                                                               .jettyAcceptQueueSize(
-                                                                   moduleConfig.getRestAcceptQueueSize())
-                                                               .jettyHttpMaxRequestHeaderSize(
-                                                                   moduleConfig.getHttpMaxRequestHeaderSize())
+                                                               .jettyAcceptQueueSize(                                                                   moduleConfig.getRestAcceptQueueSize())
+                                                               .jettyHttpMaxRequestHeaderSize(                                                                   moduleConfig.getHttpMaxRequestHeaderSize())
                                                                .build();
         jettyServer = new JettyServer(jettyServerConfig);
         jettyServer.initialize();
 
         this.registerServiceImplementation(ConfigService.class, new ConfigService(moduleConfig));
-        this.registerServiceImplementation(
-            DownSamplingConfigService.class, new DownSamplingConfigService(moduleConfig.getDownsampling()));
+        this.registerServiceImplementation(DownSamplingConfigService.class, new DownSamplingConfigService(moduleConfig.getDownsampling()));
 
         this.registerServiceImplementation(GRPCHandlerRegister.class, new GRPCHandlerRegisterImpl(grpcServer));
         this.registerServiceImplementation(JettyHandlerRegister.class, new JettyHandlerRegisterImpl(jettyServer));
@@ -249,8 +246,7 @@ public class CoreModuleProvider extends ModuleProvider {
         this.registerServiceImplementation(IModelManager.class, storageModels);
         this.registerServiceImplementation(ModelManipulator.class, storageModels);
 
-        this.registerServiceImplementation(
-            NetworkAddressAliasCache.class, new NetworkAddressAliasCache(moduleConfig));
+        this.registerServiceImplementation(NetworkAddressAliasCache.class, new NetworkAddressAliasCache(moduleConfig));
 
         this.registerServiceImplementation(TopologyQueryService.class, new TopologyQueryService(getManager()));
         this.registerServiceImplementation(MetricsMetadataQueryService.class, new MetricsMetadataQueryService());
@@ -265,10 +261,8 @@ public class CoreModuleProvider extends ModuleProvider {
         this.registerServiceImplementation(EventQueryService.class, new EventQueryService(getManager()));
 
         // add profile service implementations
-        this.registerServiceImplementation(
-            ProfileTaskMutationService.class, new ProfileTaskMutationService(getManager()));
-        this.registerServiceImplementation(
-            ProfileTaskQueryService.class, new ProfileTaskQueryService(getManager(), moduleConfig));
+        this.registerServiceImplementation(ProfileTaskMutationService.class, new ProfileTaskMutationService(getManager()));
+        this.registerServiceImplementation(ProfileTaskQueryService.class, new ProfileTaskQueryService(getManager(), moduleConfig));
         this.registerServiceImplementation(ProfileTaskCache.class, new ProfileTaskCache(getManager(), moduleConfig));
 
         this.registerServiceImplementation(CommandService.class, new CommandService(getManager()));
@@ -280,8 +274,10 @@ public class CoreModuleProvider extends ModuleProvider {
         annotationScan.registerListener(new StreamAnnotationListener(getManager()));
 
         if (moduleConfig.isGRPCSslEnabled()) {
-            this.remoteClientManager = new RemoteClientManager(getManager(), moduleConfig.getRemoteTimeout(),
-                                                               moduleConfig.getGRPCSslTrustedCAPath()
+            this.remoteClientManager = new RemoteClientManager(
+                    getManager(),
+                    moduleConfig.getRemoteTimeout(),
+                    moduleConfig.getGRPCSslTrustedCAPath()
             );
         } else {
             this.remoteClientManager = new RemoteClientManager(getManager(), moduleConfig.getRemoteTimeout());
@@ -289,8 +285,7 @@ public class CoreModuleProvider extends ModuleProvider {
         this.registerServiceImplementation(RemoteClientManager.class, remoteClientManager);
 
         // Management
-        this.registerServiceImplementation(
-            UITemplateManagementService.class, new UITemplateManagementService(getManager()));
+        this.registerServiceImplementation(UITemplateManagementService.class, new UITemplateManagementService(getManager()));
 
         if (moduleConfig.getMetricsDataTTL() < 2) {
             throw new ModuleStartException(
@@ -314,28 +309,32 @@ public class CoreModuleProvider extends ModuleProvider {
 
     @Override
     public void start() throws ModuleStartException {
+        // 此类是服务器端流式处理 RPC 实现。这是 OAP 服务器相互接收消息的常见服务。
         grpcServer.addHandler(new RemoteServiceHandler(getManager()));
+        // 添加 健康检查
         grpcServer.addHandler(new HealthCheckServiceHandler());
+        // 启动
         remoteClientManager.start();
 
         // Disable OAL script has higher priority
+        // 禁用 OAL 脚本具有更高的优先级
         oalEngineLoaderService.load(DisableOALDefine.INSTANCE);
 
         try {
+            // 接收器扫描 扫描 `org.apache.skywalking`, `com.taotao.skywalking` 的包
             receiver.scan();
+            // 注解扫描 扫描 `org.apache.skywalking`, `com.taotao.skywalking` 的包
             annotationScan.scan();
         } catch (IOException | IllegalAccessException | InstantiationException | StorageException e) {
             throw new ModuleStartException(e.getMessage(), e);
         }
 
         Address gRPCServerInstanceAddress = new Address(moduleConfig.getGRPCHost(), moduleConfig.getGRPCPort(), true);
+        // 遥测相关上下文
         TelemetryRelatedContext.INSTANCE.setId(gRPCServerInstanceAddress.toString());
-        if (CoreModuleConfig.Role.Mixed.name()
-                                       .equalsIgnoreCase(
-                                           moduleConfig.getRole())
-            || CoreModuleConfig.Role.Aggregator.name()
-                                               .equalsIgnoreCase(
-                                                   moduleConfig.getRole())) {
+        if (CoreModuleConfig.Role.Mixed.name().equalsIgnoreCase(moduleConfig.getRole())
+                || CoreModuleConfig.Role.Aggregator.name().equalsIgnoreCase(moduleConfig.getRole())) {
+            // 注册 服务地址
             RemoteInstance gRPCServerInstance = new RemoteInstance(gRPCServerInstanceAddress);
             this.getManager()
                 .find(ClusterModule.NAME)
@@ -345,11 +344,10 @@ public class CoreModuleProvider extends ModuleProvider {
         }
 
         OAPNodeChecker.setROLE(CoreModuleConfig.Role.fromName(moduleConfig.getRole()));
-
+        // 开始注册自定义监听器
         DynamicConfigurationService dynamicConfigurationService = getManager().find(ConfigurationModule.NAME)
                                                                               .provider()
-                                                                              .getService(
-                                                                                  DynamicConfigurationService.class);
+                                                                              .getService(DynamicConfigurationService.class);
         dynamicConfigurationService.registerConfigChangeWatcher(apdexThresholdConfig);
         dynamicConfigurationService.registerConfigChangeWatcher(endpointNameGroupingRuleWatcher);
         dynamicConfigurationService.registerConfigChangeWatcher(loggingConfigWatcher);
