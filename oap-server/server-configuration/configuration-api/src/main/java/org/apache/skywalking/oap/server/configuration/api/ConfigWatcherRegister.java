@@ -65,13 +65,16 @@ public abstract class ConfigWatcherRegister implements DynamicConfigurationServi
         isStarted = true;
 
         LOGGER.info("Current configurations after the bootstrap sync." + LINE_SEPARATOR + register.toString());
-
+        // 定时任务 触发
         Executors.newSingleThreadScheduledExecutor()
                  .scheduleAtFixedRate(
-                     new RunnableWithExceptionProtection(
-                         this::configSync,
-                         t -> LOGGER.error("Sync config center error.", t)
-                     ), 0, syncPeriod, TimeUnit.SECONDS);
+                         new RunnableWithExceptionProtection(
+                                 this::configSync,
+                                 t -> LOGGER.error("Sync config center error.", t)
+                         ),
+                         0,
+                         syncPeriod,
+                         TimeUnit.SECONDS);
     }
 
     void configSync() {

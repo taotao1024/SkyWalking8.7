@@ -36,7 +36,7 @@ import org.apache.skywalking.oap.server.receiver.trace.provider.handler.v8.rest.
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 
 /**
- * TODO OAP入口
+ * TODO OAP 链路数据入口
  * 跟踪模块提供程序
  * OAP 接受 Agent服务前 启动GRpc服务和Http服务
  */

@@ -30,6 +30,9 @@ import org.apache.skywalking.oap.server.receiver.jvm.provider.handler.JVMMetricR
 import org.apache.skywalking.oap.server.receiver.jvm.provider.handler.JVMMetricReportServiceHandlerCompat;
 import org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModule;
 
+/**
+ * 接受JVM数据
+ */
 public class JVMModuleProvider extends ModuleProvider {
 
     @Override

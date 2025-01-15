@@ -55,6 +55,9 @@ SRC_BROWSER_APP_TRAFFIC: 'BrowserAppTraffic';
 SRC_BROWSER_APP_PAGE_TRAFFIC: 'BrowserAppPageTraffic';
 SRC_BROWSER_APP_SINGLE_VERSION_TRAFFIC: 'BrowserAppSingleVersionTraffic';
 
+// 自定义分析
+TAO_PORT_INGRESS_SOURCE: 'TaoPortIngressSource';
+
 // Constructors symbols
 
 DOT:                                 '.';

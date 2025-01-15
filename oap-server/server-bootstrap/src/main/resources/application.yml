@@ -415,7 +415,7 @@ receiver-browser:
 receiver-log:
   selector: ${SW_RECEIVER_LOG:default}
   default:
-
+# 对外暴露的HTTP服务请求URL
 query:
   selector: ${SW_QUERY:graphql}
   graphql:

@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,16 +53,17 @@ public class AnnotationScan {
      */
     public void scan() throws IOException, StorageException {
         ClassPath classpath = ClassPath.from(this.getClass().getClassLoader());
-        ImmutableSet<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive("org.apache.skywalking");
-        for (ClassPath.ClassInfo classInfo : classes) {
-            Class<?> aClass = classInfo.load();
 
-            for (AnnotationListenerCache listener : listeners) {
-                if (aClass.isAnnotationPresent(listener.annotation())) {
-                    listener.addMatch(aClass);
-                }
-            }
-        }
+        Arrays.asList("org.apache.skywalking", "com.taotao.skywalking").forEach(packageName -> {
+            classpath.getTopLevelClassesRecursive(packageName).forEach(classInfo -> {
+                Class<?> aClass = classInfo.load();
+                listeners.forEach(listener -> {
+                    if (aClass.isAnnotationPresent(listener.annotation())) {
+                        listener.addMatch(aClass);
+                    }
+                });
+            });
+        });
 
         for (AnnotationListenerCache listener : listeners) {
             listener.complete();

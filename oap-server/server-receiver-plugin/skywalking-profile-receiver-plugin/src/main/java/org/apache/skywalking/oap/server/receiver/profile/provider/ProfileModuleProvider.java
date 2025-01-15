@@ -59,6 +59,7 @@ public class ProfileModuleProvider extends ModuleProvider {
                                                               .provider()
                                                               .getService(GRPCHandlerRegister.class);
         ProfileTaskServiceHandler profileTaskServiceHandler = new ProfileTaskServiceHandler(getManager());
+        // 添加服务
         grpcHandlerRegister.addHandler(profileTaskServiceHandler);
         grpcHandlerRegister.addHandler(new ProfileTaskServiceHandlerCompat(profileTaskServiceHandler));
     }

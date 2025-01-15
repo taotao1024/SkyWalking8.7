@@ -93,6 +93,7 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
      * Register an implementation for the service of this moduleDefine provider.
      * <p>
      * 为此模块的服务注册一个实现Define provide
+     * 在 start 阶段会被requiredCheck()检查
      */
     @Override
     public final void registerServiceImplementation(Class<? extends Service> serviceType,
@@ -108,7 +109,7 @@ public abstract class ModuleProvider implements ModuleServiceHolder {
      * Make sure all required services have been implemented.
      * {@link org.apache.skywalking.oap.server.core.CoreModule#services()}
      * <p>
-     * 确保已实施所有必需的服务。
+     * 确保application.yml中配置的服务provider中包含module中定义的服务
      *
      * @param requiredServices must be implemented by the moduleDefine.
      * @throws ServiceNotProvidedException when exist unimplemented service.

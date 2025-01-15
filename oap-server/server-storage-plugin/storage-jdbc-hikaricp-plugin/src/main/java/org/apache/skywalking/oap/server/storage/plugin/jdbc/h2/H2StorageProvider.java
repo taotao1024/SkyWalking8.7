@@ -199,6 +199,7 @@ public class H2StorageProvider extends ModuleProvider {
 
             H2TableInstaller installer = new H2TableInstaller(
                 h2Client, getManager(), config.getMaxSizeOfArrayColumn(), config.getNumOfSearchableValuesPerTag());
+            // 创建表结构
             getManager().find(CoreModule.NAME).provider().getService(ModelCreator.class).addModelListener(installer);
         } catch (StorageException e) {
             throw new ModuleStartException(e.getMessage(), e);

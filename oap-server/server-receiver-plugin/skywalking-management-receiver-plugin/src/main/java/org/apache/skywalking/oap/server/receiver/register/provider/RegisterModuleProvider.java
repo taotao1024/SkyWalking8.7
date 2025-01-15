@@ -31,6 +31,9 @@ import org.apache.skywalking.oap.server.receiver.register.provider.handler.v8.re
 import org.apache.skywalking.oap.server.receiver.register.provider.handler.v8.rest.ManagementServiceReportPropertiesHandler;
 import org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModule;
 
+/**
+ * 接收器注册
+ */
 public class RegisterModuleProvider extends ModuleProvider {
 
     @Override
