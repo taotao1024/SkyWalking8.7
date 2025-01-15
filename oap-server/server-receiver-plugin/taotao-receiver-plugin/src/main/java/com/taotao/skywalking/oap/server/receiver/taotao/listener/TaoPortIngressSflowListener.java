@@ -1,7 +1,7 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.listener;
 
 import com.taotao.skywalking.oap.server.receiver.taotao.TaotaoConfig;
-import org.apache.skywalking.oap.server.core.source.TaoTaoSource;
+import org.apache.skywalking.oap.server.core.source.TaoPortIngressSource;
 import com.taotao.skywalking.oap.server.receiver.taotao.vo.Samples;
 import com.taotao.skywalking.oap.server.receiver.taotao.vo.SflowRootBean;
 import org.apache.skywalking.oap.server.core.CoreModule;
@@ -43,7 +43,7 @@ public class TaoPortIngressSflowListener implements TaoSflowAnalysisListener {
     public void parse(SflowRootBean sflowRootBean) {
 
         for (Samples sample : sflowRootBean.getSamples()) {
-            TaoTaoSource sflowSource = new TaoTaoSource();
+            TaoPortIngressSource sflowSource = new TaoPortIngressSource();
             sflowSource.setServiceName(sflowRootBean.getIpaddress());
             sflowSource.setName(sample.getRecords().getRawheader().getL4().getDstport());
             sflowSource.setTotalLen(Integer.valueOf(sample.getRecords().getRawheader().getL3().getTotallen()));

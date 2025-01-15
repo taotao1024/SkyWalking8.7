@@ -5,11 +5,11 @@ import lombok.Setter;
 import org.apache.skywalking.oap.server.core.analysis.IDManager;
 
 import static org.apache.skywalking.oap.server.core.source.DefaultScopeDefine.SERVICE_INSTANCE_CATALOG_NAME;
-import static org.apache.skywalking.oap.server.core.source.DefaultScopeDefine.TAOTAO_SOURCE;
+import static org.apache.skywalking.oap.server.core.source.DefaultScopeDefine.TAO_PORT_INGRESS_SOURCE;
 
-@ScopeDeclaration(id = TAOTAO_SOURCE, name = "TaoTaoSource", catalog = SERVICE_INSTANCE_CATALOG_NAME)
+@ScopeDeclaration(id = TAO_PORT_INGRESS_SOURCE, name = "TaoPortIngressSource", catalog = SERVICE_INSTANCE_CATALOG_NAME)
 @ScopeDefaultColumn.VirtualColumnDefinition(fieldName = "entityId", columnName = "entity_id", isID = true, type = String.class)
-public class TaoTaoSource extends Source {
+public class TaoPortIngressSource extends Source {
     private volatile String entityId;
 
     @Getter
@@ -33,7 +33,7 @@ public class TaoTaoSource extends Source {
 
     @Override
     public int scope() {
-        return TAOTAO_SOURCE;
+        return TAO_PORT_INGRESS_SOURCE;
     }
 
     @Override
