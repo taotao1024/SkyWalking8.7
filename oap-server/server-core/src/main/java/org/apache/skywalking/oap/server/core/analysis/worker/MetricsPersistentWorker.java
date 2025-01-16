@@ -49,6 +49,7 @@ import org.apache.skywalking.oap.server.telemetry.api.MetricsTag;
 
 /**
  * MetricsPersistentWorker is an extension of {@link PersistenceWorker} and focuses on the Metrics data persistent.
+ * 注于 Metrics 数据持久化
  */
 @Slf4j
 public class MetricsPersistentWorker extends PersistenceWorker<Metrics> {
@@ -209,6 +210,11 @@ public class MetricsPersistentWorker extends PersistenceWorker<Metrics> {
         return prepareRequests;
     }
 
+    /**
+     * 刷新数据到 Storage 中
+     * @param metricsList
+     * @param prepareRequests
+     */
     private void flushDataToStorage(List<Metrics> metricsList,
                                     List<PrepareRequest> prepareRequests) {
         try {

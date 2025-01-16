@@ -1,45 +1,43 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class L3 {
 
-    @JsonProperty("Version")
+    @SerializedName("Version")
     private String version;
 
-    @JsonProperty("TOS")
+    @SerializedName("TOS")
     private String tos;
 
-    @JsonProperty("TotalLen")
+    @SerializedName("TotalLen")
     private String totallen;
 
-    @JsonProperty("ID")
+    @SerializedName("ID")
     private String id;
 
-    @JsonProperty("Flags")
+    @SerializedName("Flags")
     private String flags;
 
-    @JsonProperty("FragOff")
+    @SerializedName("FragOff")
     private String fragoff;
 
-    @JsonProperty("TTL")
+    @SerializedName("TTL")
     private String ttl;
 
-    @JsonProperty("Protocol")
+    @SerializedName("Protocol")
     private String protocol;
 
-    @JsonProperty("Checksum")
+    @SerializedName("Checksum")
     private String checksum;
 
-    @JsonProperty("Src")
+    @SerializedName("Src")
     private String src;
 
-    @JsonProperty("Dst")
+    @SerializedName("Dst")
     private String dst;
 
 }

@@ -1,6 +1,6 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.util.List;
@@ -8,43 +8,43 @@ import java.util.List;
 @Data
 public class Netflowv9Vo {
 
-    @JsonProperty("AgentID")
+    @SerializedName("AgentID")
     private String AgentID;
 
-    @JsonProperty("Header")
+    @SerializedName("Header")
     private HeaderBean Header;
 
     @Data
     public static class HeaderBean{
-        @JsonProperty("Version")
+        @SerializedName("Version")
         private String Version;
 
-        @JsonProperty("Count")
+        @SerializedName("Count")
         private String Count;
 
-        @JsonProperty("SysUpTime")
+        @SerializedName("SysUpTime")
         private Long SysUpTime;
 
-        @JsonProperty("UNIXSecs")
+        @SerializedName("UNIXSecs")
         private Long UNIXSecs;
 
-        @JsonProperty("SeqNum")
+        @SerializedName("SeqNum")
         private Long SeqNum;
 
-        @JsonProperty("SrcID")
+        @SerializedName("SrcID")
         private Long SrcID;
 
     }
 
-    @JsonProperty("DataSets")
+    @SerializedName("DataSets")
     private List<List<KeyValueBean>> DataSets;
 
     @Data
     public static class KeyValueBean{
-        @JsonProperty("I")
+        @SerializedName("I")
         private String I;
 
-        @JsonProperty("V")
+        @SerializedName("V")
         private String V;
     }
 }

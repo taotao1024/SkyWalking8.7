@@ -1,37 +1,35 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Samples {
 
-    @JsonProperty("SequenceNo")
+    @SerializedName("SequenceNo")
     private String sequenceno;
 
-    @JsonProperty("SourceID")
+    @SerializedName("SourceID")
     private SourceID sourceid;
 
-    @JsonProperty("SamplingRate")
+    @SerializedName("SamplingRate")
     private String samplingrate;
 
-    @JsonProperty("SamplePool")
+    @SerializedName("SamplePool")
     private String samplepool;
 
-    @JsonProperty("Drops")
+    @SerializedName("Drops")
     private String drops;
 
-    @JsonProperty("Input")
+    @SerializedName("Input")
     private Input input;
 
-    @JsonProperty("Output")
+    @SerializedName("Output")
     private Output output;
 
-    @JsonProperty("RecordsNo")
+    @SerializedName("RecordsNo")
     private String RecordsNo;
 
-    @JsonProperty("Records")
+    @SerializedName("Records")
     private Records records;
 }

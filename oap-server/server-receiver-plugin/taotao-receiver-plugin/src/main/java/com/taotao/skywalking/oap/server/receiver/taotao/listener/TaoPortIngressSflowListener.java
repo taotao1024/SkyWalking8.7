@@ -44,6 +44,7 @@ public class TaoPortIngressSflowListener implements TaoSflowAnalysisListener {
 
         for (Samples sample : sflowRootBean.getSamples()) {
             TaoPortIngressSource sflowSource = new TaoPortIngressSource();
+            sflowSource.setServiceId("Tao.01");
             sflowSource.setServiceName(sflowRootBean.getIpaddress());
             sflowSource.setName(sample.getRecords().getRawheader().getL4().getDstport());
             sflowSource.setTotalLen(Integer.valueOf(sample.getRecords().getRawheader().getL3().getTotallen()));

@@ -1,42 +1,41 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.vo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SflowRootBean {
 
-    @JsonProperty("Version")
+    @SerializedName("Version")
     private String version;
 
-    @JsonProperty("IPVersion")
+    @SerializedName("IPVersion")
     private String ipversion;
 
-    @JsonProperty("AgentSubID")
+    @SerializedName("AgentSubID")
     private String agentsubid;
 
-    @JsonProperty("SequenceNo")
+    @SerializedName("SequenceNo")
     private String sequenceno;
 
-    @JsonProperty("SysUpTime")
+    @SerializedName("SysUpTime")
     private String sysuptime;
 
-    @JsonProperty("SamplesNo")
+    @SerializedName("SamplesNo")
     private String samplesno;
 
-    @JsonProperty("Samples")
+    @SerializedName("Samples")
     private List<Samples> samples;
 
-//    @JsonProperty("Counters")
+//    @SerializedName("Counters")
 //    private List<Object> counters;
 
-    @JsonProperty("IPAddress")
+    @SerializedName("IPAddress")
     private String ipaddress;
 
-    @JsonProperty("ColTime")
+    @SerializedName("ColTime")
     private String coltime;
 
 }

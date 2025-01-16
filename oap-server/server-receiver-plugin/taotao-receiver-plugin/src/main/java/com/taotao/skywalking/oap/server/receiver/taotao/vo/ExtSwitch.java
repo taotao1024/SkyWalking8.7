@@ -1,24 +1,22 @@
 package com.taotao.skywalking.oap.server.receiver.taotao.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtSwitch {
 
-    @JsonProperty("SrcVlan")
+    @SerializedName("SrcVlan")
     private String srcvlan;
 
-    @JsonProperty("SrcPriority")
+    @SerializedName("SrcPriority")
     private String srcpriority;
 
-    @JsonProperty("DstVlan")
+    @SerializedName("DstVlan")
     private String dstvlan;
 
-    @JsonProperty("DstPriority")
+    @SerializedName("DstPriority")
     private String dstpriority;
 
 

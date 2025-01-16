@@ -18,6 +18,7 @@ public class TaoPortIngressSource extends Source {
     private String name;
 
     @Getter
+    @Setter
     @ScopeDefaultColumn.DefinedByField(columnName = "service_id")
     private String serviceId;
 
